@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0.0
+Encoding=UTF-8
+Name=pySafe
+Exec=/opt/pysafe/pysafe
+Icon=pysafe_128x128
+X-Icon-path=/usr/share/icons
+X-Window-Icon=pysafe_128x128
+Type=Application
+#X-Osso-Service=com.nokia.mclock        
+X-Osso-Type=application/x-executable
+StartupWMClass=pySafe
