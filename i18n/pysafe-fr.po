@@ -1,0 +1,208 @@
+# French translation for pySafe.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pySafe 0.5\n"
+"POT-Creation-Date: 2010-02-05 00:53+BRST\n"
+"PO-Revision-Date: 2010-02-11 14:01+0100\n"
+"Last-Translator: Ithier de Lestrange <pysafe@ithier.com>\n"
+"Language-Team: Ithier <pysafe@ithier.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+
+msgid "translator-credits"
+msgstr "Ithier de Lestrange <pysafe@ithier.com>"
+
+#: fremantle.py:36
+msgid "Add group"
+msgstr "Ajouter un groupe"
+
+#: fremantle.py:41
+msgid "Remove group"
+msgstr "Supprimer un groupe"
+
+#: fremantle.py:46
+msgid "Add item"
+msgstr "Ajouter une fiche"
+
+#: fremantle.py:51
+msgid "Remove item"
+msgstr "Supprimer une fiche"
+
+#: fremantle.py:56
+msgid "Change password"
+msgstr "Modifier le mot de passe"
+
+#: fremantle.py:61
+msgid "About"
+msgstr "A propos"
+
+#: fremantle.py:66
+msgid "Add detail"
+msgstr "Ajouter un champ"
+
+#: fremantle.py:71
+msgid "Remove detail"
+msgstr "Supprimer un champ"
+
+#: fremantle.py:76
+msgid "Import"
+msgstr "Importer"
+
+#: fremantle.py:162
+msgid "The database could not be updated. Check file permissions or disk space."
+msgstr "Impossible de mettre à jour le fichier des mots de passe. Vérifier les permissions et l'espace disque."
+
+#: fremantle.py:223
+#: fremantle.py:306
+msgid "Done"
+msgstr "Terminé"
+
+#: fremantle.py:226
+msgid "New Group"
+msgstr "Nouveau groupe"
+
+#: fremantle.py:228
+msgid "New Group in \"%s\""
+msgstr "Nouveau groupe dans  \"%s\""
+
+#: fremantle.py:229
+#: fremantle.py:264
+#: fremantle.py:312
+msgid "Name"
+msgstr "Nom"
+
+#: fremantle.py:243
+msgid "The group \"%s\" already exists!"
+msgstr "Le groupe \"%s\" existe déjà !"
+
+#: fremantle.py:247
+msgid "Are you sure you want to remove the group \"%s\" and all its items?"
+msgstr "Voulez-vous supprimer le groupe \"%s\" et toutes ses fiches ?"
+
+#: fremantle.py:261
+msgid "New Item"
+msgstr "Nouvelle fiche"
+
+#: fremantle.py:263
+msgid "New Item for Group \"%s\""
+msgstr "Nouvelle fiche dans le groupe \"%s\""
+
+#: fremantle.py:286
+msgid "The item \"%s\" already exists!"
+msgstr "La fiche \"%s\" existe déjà !"
+
+#: fremantle.py:292
+msgid "Are you sure you want to remove the item \"%s\" from the group \"%s\"?"
+msgstr "Voulez-vous supprimer la fiche \"%s\" du groupe \"%s\" ?"
+
+#: fremantle.py:294
+msgid "Are you sure you want to remove the item \"%s\"?"
+msgstr "Voulez-vous supprimer la fiche \"%s\" ?"
+
+#: fremantle.py:309
+msgid "New Detail for Item \"%s\""
+msgstr "Nouveau champ de la fiche \"%s\""
+
+#: fremantle.py:311
+msgid "New Detail for Item \"%s\" in Group \"%s\""
+msgstr "Nouveau champ de la fiche \"%s\" du groupe \"%s\""
+
+#: fremantle.py:320
+msgid "The detail \"%s\" already exists!"
+msgstr "Le champ \"%s\" existe déjà !"
+
+#: fremantle.py:497
+msgid "Type your new password"
+msgstr "Saisissez votre nouveau mot de passe"
+
+#: fremantle.py:506
+#: fremantle.py:785
+msgid "The password can not be empty!"
+msgstr "Le mot de passe ne peut pas être vide"
+
+#: fremantle.py:514
+msgid "Re-type your new password"
+msgstr "Re-saisissez votre mot de passe"
+
+#: fremantle.py:522
+#: fremantle.py:814
+msgid "The passwords are not equals!"
+msgstr "Les mots de passes ne sont pas identiques"
+
+#: fremantle.py:527
+msgid "Password changed!"
+msgstr "Le mot de passe a été changé"
+
+#: fremantle.py:553
+msgid "Choose details to delete"
+msgstr "Choisissez les champs à supprimer"
+
+#: fremantle.py:553
+msgid "Delete"
+msgstr "Supprimer"
+
+#: fremantle.py:636
+msgid "Import Wizard"
+msgstr "Assistant d'import"
+
+#: fremantle.py:677
+msgid "This wizard will guide you through the importing data process."
+msgstr "Cet assistant vous guidera dans le processus d'import."
+
+#: fremantle.py:678
+msgid "File location"
+msgstr "Emplacement du fichier"
+
+#: fremantle.py:679
+msgid "File type"
+msgstr "Type de fichier"
+
+#: fremantle.py:776
+msgid "Type your password"
+msgstr "Saisissez votre mot de passe"
+
+#: fremantle.py:795
+msgid "The database are not updataple. Check file permissions or disk space."
+msgstr "Le fichier des mots de passe ne peut pas être mise à jour. Vérifier les permissions et l'espace disque."
+
+#: fremantle.py:798
+msgid "Database file not found. Confirm the creation of a new one?"
+msgstr "Le fichier des mots de passe n'existe pas. Voulez-vous en créer un nouveau ?"
+
+#: fremantle.py:806
+msgid "Re-type your password"
+msgstr "Re-saisissez votre mot de passe"
+
+#: fremantle.py:821
+msgid "An undefined error has ocurred!"
+msgstr "Une erreur inattendue s'est produite !"
+
+#: fremantle.py:823
+msgid "Invalid password!"
+msgstr "Mot de passe erroné !"
+
+#: fremantle.py:825
+msgid "Database corrupted or invalid password!"
+msgstr "Le fichier des mots de passe est corrompu ou le mot de passe est erroné !"
+
+#: import_data.py:16
+msgid "File \"%s\" does not exist or it was not possible open it."
+msgstr "Le fichier \"%s\" n'existe pas ou ne peut pas être ouvert."
+
+#: import_data.py:21
+msgid "The file format parameter was not recognized."
+msgstr "Le format du fichier est inconnu."
+
+#: import_data.py:63
+msgid "Handy Safe Pro"
+msgstr "Handy Safe Pro"
+
+#: import_data.py:112
+msgid "Note"
+msgstr "Note"
+

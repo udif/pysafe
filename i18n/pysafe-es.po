@@ -1,0 +1,203 @@
+# Spanish translation for pySafe.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2010-01-12 17:56+BRST\n"
+"PO-Revision-Date: 2010-01-20 17:00+BRST\n"
+"Last-Translator: Art.M <art.m.mexico@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: ENCODING\n"
+"Generated-By: pygettext.py 1.5\n"
+
+msgid "translator-credits"
+msgstr "Art.M <art.m.mexico@gmail.com>"
+
+#: pysafe:176
+msgid "Add group"
+msgstr "Agregar grupo"
+
+#: pysafe:181
+msgid "Remove group"
+msgstr "Eliminar grupo"
+
+#: pysafe:186
+msgid "Add item"
+msgstr "Agregar elemento"
+
+#: pysafe:191
+msgid "Remove item"
+msgstr "Eliminar elemento"
+
+#: pysafe:196
+msgid "Change password"
+msgstr "Cambiar contraseña"
+
+#: pysafe:201
+msgid "About"
+msgstr "Acerca de..."
+
+#: pysafe:206
+msgid "Add detail"
+msgstr "Agregar detalle"
+
+#: pysafe:211
+msgid "Remove detail"
+msgstr "Eliminar detalle"
+
+#: fremantle.py:76
+msgid "Import"
+msgstr "Importar"
+
+#: pysafe:285
+msgid "The database could not be updated. Check file permissions or disk space."
+msgstr "La base de datos no pudo ser actualizada. Revise los permisos de archivo o el espacio disponible en el disco."
+
+#: pysafe:296
+msgid "New Group"
+msgstr "Nuevo grupo"
+
+#: pysafe:296 pysafe:345
+msgid "Done"
+msgstr "Guardar"
+
+#: fremantle.py:228
+msgid "New Group in \"%s\""
+msgstr "Nuevo grupo en \"%s\""
+
+#: pysafe:297 pysafe:320 pysafe:346
+msgid "Name"
+msgstr "Nombre"
+
+#: pysafe:305
+msgid "The group \"%s\" already exists!"
+msgstr "¡El grupo \"%s\" ya existe!"
+
+#: pysafe:309
+msgid "Are you sure you want to remove the group \"%s\" and all its items?"
+msgstr "¿Está seguro que quiere eliminar el grupo \"%s\" y todos sus elementos?"
+
+#: fremantle.py:261
+msgid "New Item"
+msgstr "Nuevo elemento"
+
+#: pysafe:319
+msgid "New Item for Group \"%s\""
+msgstr "Nuevo elemento para el grupo \"%s\""
+
+#: pysafe:328
+msgid "The item \"%s\" already exists!"
+msgstr "¡El elemento \"%s\" ya existe!"
+
+#: pysafe:334
+msgid "Are you sure you want to remove the item \"%s\" from the group \"%s\"?"
+msgstr "¿Está seguro que quiere eliminar el elemento \"%s\" del grupo \"%s\"?"
+
+#: pysafe:334
+msgid "Are you sure you want to remove the item \"%s\"?"
+msgstr "¿Está seguro que quiere eliminar el elemento \"%s\"?"
+
+#: pysafe:345
+msgid "New Detail for Item \"%s\""
+msgstr "Nuevo detalle para el elemento \"%s\""
+
+#: pysafe:345
+msgid "New Detail for Item \"%s\" in Group \"%s\""
+msgstr "Nuevo detalle para el elemento \"%s\" en el grupo \"%s\""
+
+#: pysafe:354
+msgid "The detail \"%s\" already exists!"
+msgstr "¡El detalle \"%s\" ya existe!"
+
+#: pysafe:505
+msgid "Type your new password"
+msgstr "Escriba su nueva contraseña"
+
+#: pysafe:514 pysafe:640
+msgid "The password can not be empty!"
+msgstr "¡La contraseña no pude quedar vacía!"
+
+#: pysafe:522
+msgid "Re-type your new password"
+msgstr "Vuelva a escribir su nueva contraseña"
+
+#: pysafe:530 pysafe:669
+msgid "The passwords are not equals!"
+msgstr "¡Las contraseñas no coinciden!"
+
+#: pysafe:535
+msgid "Password changed!"
+msgstr "¡Contraseña cambiada!"
+
+#: pysafe:556
+msgid "Choose details to delete"
+msgstr "Elija los detalles a eliminar"
+
+#: pysafe:556
+msgid "Delete"
+msgstr "Suprimir"
+
+#: fremantle.py:636
+msgid "Import Wizard"
+msgstr "Asistente de importación"
+
+#: fremantle.py:677
+msgid "This wizard will guide you through the importing data process."
+msgstr "Este asistente le guiará a través del proceso de importación de datos."
+
+#: fremantle.py:678
+msgid "File location"
+msgstr "Ubicación del archivo"
+
+#: fremantle.py:679
+msgid "File type"
+msgstr "Tipo de archivo"
+
+#: pysafe:631
+msgid "Type your password"
+msgstr "Escriba su contraseña"
+
+#: pysafe:650
+msgid "The database are not updataple. Check file permissions or disk space."
+msgstr "La base de datos no es actualizable. Revise los permisos de archivo o el espacio en el disco."
+
+#: pysafe:653
+msgid "Database file not found. Confirm the creation of a new one?"
+msgstr "No se encontró la base de datos. ¿Crear una base de datos nueva?"
+
+#: pysafe:661
+msgid "Re-type your password"
+msgstr "Vuelva a escribir su contraseña"
+
+#: pysafe:676
+msgid "An undefined error has ocurred!"
+msgstr "¡Ocurrió un error no identificado!"
+
+#: pysafe:678
+msgid "Invalid password!"
+msgstr "¡Contraseña incorrecta!"
+
+#: pysafe:680
+msgid "Database corrupted or invalid password!"
+msgstr "¡La base de datos está dañada o la contraseña es incorrecta!"
+
+#: import_data.py:16
+msgid "File \"%s\" does not exist or it was not possible open it."
+msgstr "El archivo \"%s\" no existe o no es posible abrirlo."
+
+#: import_data.py:21
+msgid "The file format parameter was not recognized."
+msgstr "El parámetro de formato de archivo no ha sido reconocido."
+
+#: import_data.py:63
+msgid "Handy Safe Pro"
+msgstr "Handy Safe Pro"
+
+#: import_data.py:112
+msgid "Note"
+msgstr "Nota"
+
