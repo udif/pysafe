@@ -415,6 +415,9 @@ class MainWindow():
         buf.set_text(itens[i])
         view.set_buffer(buf)
         buf.connect("changed", self.textview_changed, i)
+      input_mode = view.get_property("hildon-input-mode")
+      input_mode &= ~gtk.HILDON_GTK_INPUT_MODE_DICTIONARY
+      view.set_property("hildon-input-mode", input_mode)
       label = gtk.Label(i[2:])
       label.set_alignment(0,0)
       self.item_detail_area.pack_start(label, False, True, 0)
