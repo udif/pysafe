@@ -334,7 +334,7 @@ class MainWindow():
   def about_clicked(self, src):
     dialog = gtk.AboutDialog()
     dialog.set_name("pySafe")
-    dialog.set_version("0.7.0")
+    dialog.set_version("0.7.2")
     dialog.set_authors(["Jorge Aguilar"])
     dialog.set_translator_credits(_("translator-credits"))
     dialog.set_logo(gtk.gdk.pixbuf_new_from_file_at_size('%s/icons/pysafe_48x48.png' % (sys.path[0]), 48, 48))
