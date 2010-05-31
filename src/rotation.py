@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
-import hildon
 import dbus
-import dbus.glib
-import osso
+from dbus.mainloop.qt import DBusQtMainLoop
+
+try:
+  import osso
+  OSSO = True
+except ImportError:
+  OSSO = False
 
 
 """
@@ -32,7 +36,7 @@ class FremantleRotation(object):
     _MCE_REQUEST_PATH = '/com/nokia/mce/request'
     _MCE_REQUEST_IF = 'com.nokia.mce.request'
 
-    def __init__(self, app_name, main_window=None, version='1.0', mode=0, cb = None):
+    def __init__(self, app_name, version='1.0', mode=0, cb = None):
         """Create a new rotation manager
 
         app_name    ... The name of your application (for osso.Context)
@@ -42,15 +46,14 @@ class FremantleRotation(object):
         """
         self._callback = cb
         self._orientation = None
-        self._main_window = main_window
-        self._stack = hildon.WindowStack.get_default()
         self._mode = -1
         self._last_dbus_orientation = None
         app_id = '-'.join((app_name, self.__class__.__name__))
-        self._osso_context = osso.Context(app_id, version, False)
-        program = hildon.Program.get_instance()
-        program.connect('notify::is-topmost', self._on_topmost_changed)
-        system_bus = dbus.Bus.get_system()
+        if OSSO:
+          self._osso_context = osso.Context(app_id, version, False)
+
+        loop = DBusQtMainLoop(set_as_default=True)
+        system_bus = dbus.SystemBus(mainloop=loop)
         system_bus.add_signal_receiver(self._on_orientation_signal, \
                 signal_name='sig_device_orientation_ind', \
                 dbus_interface='com.nokia.mce.signal', \
@@ -98,48 +101,18 @@ class FremantleRotation(object):
             self._mode = new_mode
 
     def _send_mce_request(self, request):
-        rpc = osso.Rpc(self._osso_context)
-        rpc.rpc_run(self._MCE_SERVICE, \
-                    self._MCE_REQUEST_PATH, \
-                    self._MCE_REQUEST_IF, \
-                    request, \
-                    use_system_bus=True)
-
-    def _on_topmost_changed(self, program, property_spec):
-        # XXX: This seems to never get called on Fremantle(?)
-        if self._mode == self.AUTOMATIC:
-            if program.get_is_topmost():
-                self._send_mce_request(self._ENABLE_ACCEL)
-            else:
-                self._send_mce_request(self._DISABLE_ACCEL)
-
-    def _get_main_window(self):
-        if self._main_window:
-            # If we have gotten the main window as parameter, return it and
-            # don't try "harder" to find another window using the stack
-            return self._main_window
-        else:
-            # The main window is at the "bottom" of the window stack, and as
-            # the list we get with get_windows() is sorted "topmost first", we
-            # simply take the last item of the list to get our main window
-            windows = self._stack.get_windows()
-            if windows:
-                return windows[-1]
-            else:
-                return None
+        if OSSO:
+          rpc = osso.Rpc(self._osso_context)
+          rpc.rpc_run(self._MCE_SERVICE, \
+                      self._MCE_REQUEST_PATH, \
+                      self._MCE_REQUEST_IF, \
+                      request, \
+                      use_system_bus=True)
 
     def _orientation_changed(self, orientation):
         if self._orientation == orientation:
             # Ignore repeated requests
             return
-
-        flags = hildon.PORTRAIT_MODE_SUPPORT
-        if orientation == self._PORTRAIT:
-            flags |= hildon.PORTRAIT_MODE_REQUEST
-
-        window = self._get_main_window()
-        if window is not None:
-            hildon.hildon_gtk_window_set_portrait_flags(window, flags)
 
         self._orientation = orientation
         self._callback(self._orientation)

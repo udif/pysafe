@@ -2,14 +2,130 @@
 #import gettext, sys, pickle
 import os
 import xml_util
+import sys
 import tempfile
 from database import Dados
+
+from PyQt4.QtGui import *
+from PyQt4.QtCore import *
 
 
 def convert_to_str(value):
   if type(value) is unicode:
     return value.encode("utf-8")
   return value
+
+
+class ImportWizard(QWizard):
+
+  def __init__(self, parent, database):
+    QWizard.__init__(self, parent)
+
+    self.import_type = QListView()
+    self.filetype = None
+
+    self.currentIdChanged.connect(self.pageChanged)
+    self.setWindowTitle(_("Import Wizard"))
+
+    self.addPage(self.createWelcome())
+    self.addPage(self.createFileName())
+    self.addPage(self.createFileType())
+
+    while self.exec_():
+      if self.filetype != None and type(self.filetype) is int:
+        import_from_file(database, self.field("filename").toString(), self.filetype)
+        break
+
+
+  def pageChanged(self, id):
+    if id == 2:
+      f = str(self.field("filename").toString()).strip()
+      if len(f) == 0:
+        self.back()
+      if not os.path.isfile(f):
+        QMessageBox.warning(None, " ", _("File \"%s\" does not exist or it was not possible open it.") % f)
+        self.back()
+
+
+  def createWelcome(self):
+    page = QWizardPage()
+
+    label = QLabel(_("This wizard will guide you through the importing process."))
+    label.setWordWrap(True)
+
+    layout = QVBoxLayout()
+    layout.addWidget(label)
+    page.setLayout(layout)
+
+    return page
+
+
+  def createFileName(self):
+    page = QWizardPage()
+
+    button = QPushButton("")
+    button.setIcon(QIcon('%s/icons/file-open.png' % (sys.path[0])))
+    button.clicked.connect(self.file_button_clicked)
+
+    filename = QLineEdit()
+    page.registerField("filename*", filename)
+
+    layout = QHBoxLayout()
+    layout.addWidget(filename)
+    layout.addWidget(button)
+
+    page.setLayout(layout)
+
+    return page
+
+
+  def createFileType(self):
+    page = QWizardPage()
+
+    self.import_type.clicked.connect(self.groupListClicked)
+    model = QStandardItemModel()
+    self.import_type.setModel(model)
+    parent = model.invisibleRootItem()
+
+    tipos = import_from_file.get_types()
+    for i in tipos:
+      item = GroupListItem(tipos[i], i)
+      parent.appendRow(item)
+
+    layout = QHBoxLayout()
+    layout.addWidget(self.import_type)
+
+    page.setLayout(layout)
+
+    return page
+
+
+  def file_button_clicked(self):
+    dialog = QFileDialog(self)
+    dialog.setViewMode(QFileDialog.List)
+    dialog.setReadOnly(True)
+    dialog.setNameFilterDetailsVisible(False)
+    if dialog.exec_():
+      ls = dialog.selectedFiles()
+      self.setField("filename", ls[0])
+
+
+  def groupListClicked(self, index):
+    model = self.import_type.model()
+    item = model.itemFromIndex(index)
+    self.filetype = item.getId()
+
+
+class GroupListItem(QStandardItem):
+
+  def __init__(self, text, id):
+    QStandardItem.__init__(self, text)
+
+    self.__text = text
+    self.__id = id
+
+  def getId(self):
+    return self.__id
 
 
 class import_from_file:
@@ -23,7 +139,10 @@ class import_from_file:
   """
   def __init__(self, database, file_name, file_format):
     if not os.path.isfile(file_name):
-      raise IOError, _("File %s does not exist or it was not possible open it.") % file_name
+      raise IOError, _("File \"%s\" does not exist or it was not possible open it.") % file_name
+
+    if type(file_name) is not str:
+      file_name = str(file_name)
 
     if file_format == self.HANDY_SAFE_PRO_TEXT:
       handy_safe_pro_text(database, file_name)
@@ -92,7 +211,7 @@ class handy_safe_pro_text:
   def read_handy_safe_pro_text_block(self, database, block):
     # remove todos os linefeed do final, mas coloca um!
     block = "%s\n" % block.rstrip("\n")
-    path = []
+    path = [0]
     item = None
     state = 0
     note = ""
@@ -103,13 +222,13 @@ class handy_safe_pro_text:
 
       if l[:10] == "[Category:":
         l = l.rstrip("\n").strip()
-        g = database.add_group(path, l[11:len(l) - 1], ignore_existent = True)
+        g = database.add_group(path[-1], l[11:len(l) - 1])
         path.append(g)
       elif l[:12] == "[Card, Icon:":
         state = 1
       elif state == 1:
         pos = l.find(":")
-        i = database.add_item(path, l[pos + 1:].strip(), ignore_existent = True)
+        i = database.add_item(path[-1], l[pos + 1:].strip())
         path.append(i)
         state = 2
       elif state == 2:
@@ -122,8 +241,8 @@ class handy_safe_pro_text:
         else:
           detail_value = detail_value.rstrip("\n").strip()
           if len(detail_value) > 0:
-            detail_name = database.add_detail(path, detail_name, ignore_existent = True)
-            database.set_detail(path, detail_name, detail_value)
+            id = database.add_detail(path[-1], detail_name)
+            database.set_detail(id, detail_value)
 
       if state == 3:
         if len(l) > 0:
@@ -131,8 +250,8 @@ class handy_safe_pro_text:
 
     note = note.rstrip("\n").strip()
     if len(note) > 0:
-      detail = database.add_detail(path, _("Note"), ignore_existent = True)
-      database.set_detail(path, detail, note)
+      id = database.add_detail(path[-1], _("Note"))
+      database.set_detail(id, note)
 
 
 """
@@ -145,31 +264,29 @@ class handy_safe_pro_xml:
     self.read(database, data["HandySafe"])
 
 
-  def read(self, database, data, path = []):
+  def read(self, database, data, path = [0]):
     for i in data:
-      print "%s.%s (%i) = %s" % (path, i, len(data[i]), type(data[i]))
-
       if type(data[i]) is list:
         for j in data[i]:
           if i == "Folder":
-            group = database.add_group(path, convert_to_str(j["name"]), ignore_existent = True)
-            path.append(group)
+            id = database.add_group(path[-1], convert_to_str(j["name"]))
+            path.append(id)
             self.read(database, j, path)
             path.pop()
           elif i == "Card":
-            item = database.add_item(path, convert_to_str(j["name"]), ignore_existent = True)
-            path.append(item)
+            id = database.add_item(path[-1], convert_to_str(j["name"]))
+            path.append(id)
             self.read_card(database, path, j)
             path.pop()
       elif type(data[i]) is dict:
         if i == "Card":
-          item = database.add_item(path, convert_to_str(data[i]["name"]), ignore_existent = True)
-          path.append(item)
+          id = database.add_item(path[-1], convert_to_str(data[i]["name"]))
+          path.append(id)
           self.read_card(database, path, data[i])
           path.pop()
         elif i == "Folder":
-          group = database.add_group(path, convert_to_str(data[i]["name"]), ignore_existent = True)
-          path.append(group)
+          id = database.add_group(path[-1], convert_to_str(data[i]["name"]))
+          path.append(id)
           self.read(database, data[i], path)
           path.pop()
 
@@ -181,17 +298,13 @@ class handy_safe_pro_xml:
     #item = database.add_item(path, data["name"], ignore_existent = True)
     #path.append(item)
 
-    print "---------- %s.%s" % (path, name)
     for i in field:
       if "_text" in i:
-        detail = database.add_detail(path, convert_to_str(i["name"]), ignore_existent = True)
-        print "%s = \"%s\"" % (detail, i["_text"])
-        database.set_detail(path, detail, convert_to_str(i["_text"]))
+        id = database.add_detail(path[-1], convert_to_str(i["name"]))
+        database.set_detail(id, convert_to_str(i["_text"]))
     if "Note" in data:
-      detail = database.add_detail(path, _("Note"), multiline = True, ignore_existent = True)
-      print "%s = \"%s\"" % (detail, data["Note"])
-      database.set_detail(path, detail, convert_to_str(data["Note"]))
-    print ""
+      id = database.add_detail(path[-1], _("Note"))
+      database.set_detail(id, convert_to_str(data["Note"]))
 
 
 """
@@ -204,36 +317,30 @@ class palm_keyring_xml:
     self.read(database, data["pwlist"])
 
 
-  def read(self, database, data, path = []):
+  def read(self, database, data, path = [0]):
     for i in data:
-      print "%s.%s (%i) = %s" % (path, i, len(data[i]), type(data[i]))
 
       if type(data[i]) is list:
         for j in data[i]:
-          group = database.add_group(path, convert_to_str(j["category"]), ignore_existent = True)
-          path.append(group)
+          id = database.add_group(path[-1], convert_to_str(j["category"]))
+          path.append(id)
           self.read_item(database, path, j)
           path.pop()
 
 
   def read_item(self, database, path, data):
-    item = database.add_item(path, convert_to_str(data["title"]), ignore_existent = True)
-    path.append(item)
+    id = database.add_item(path[-1], convert_to_str(data["title"]))
+    path.append(id)
 
-    print "---------- %s" % (path)
     for i in data:
       if i == "title" or i == "category":
         continue
       elif i == "notes":
-        ml = (data[i].find("\n") > 0)
-        detail = database.add_detail(path, _("Note"), multiline = ml, ignore_existent = True)
-        print "%s = \"%s\"" % (detail, data[i])
-        database.set_detail(path, detail, convert_to_str(data[i]))
+        id = database.add_detail(path[-1], _("Note"))
+        database.set_detail(id, convert_to_str(data[i]))
       else:
-        detail = database.add_detail(path, convert_to_str(i), ignore_existent = True)
-        print "%s = \"%s\"" % (detail, data[i])
-        database.set_detail(path, detail, convert_to_str(data[i]))
-    print ""
+        id = database.add_detail(path[-1], convert_to_str(i))
+        database.set_detail(id, convert_to_str(data[i]))
 
     path.pop()
 
@@ -263,46 +370,41 @@ class keepassx_xml:
     self.read(database, data["database"])
 
 
-  def read(self, database, data, path = []):
+  def read(self, database, data, path = [0]):
     for i in data:
-      print "%s.%s (%i) = %s" % (path, i, len(data[i]), type(data[i]))
 
       if type(data[i]) is list:
         for j in data[i]:
           if i == "group":
-            group = database.add_group(path, convert_to_str(j["title"]), ignore_existent = True)
-            path.append(group)
+            id = database.add_group(path[-1], convert_to_str(j["title"]))
+            path.append(id)
             self.read(database, j, path)
             path.pop()
           elif i == "entry":
-            item = database.add_item(path, convert_to_str(j["title"]), ignore_existent = True)
-            path.append(item)
+            id = database.add_item(path[-1], convert_to_str(j["title"]))
+            path.append(id)
             self.read_card(database, path, j)
             path.pop()
       elif type(data[i]) is dict:
         if i == "group":
-          group = database.add_group(path, convert_to_str(data[i]["title"]), ignore_existent = True)
-          path.append(group)
+          id = database.add_group(path[-1], convert_to_str(data[i]["title"]))
+          path.append(id)
           self.read(database, data[i], path)
           path.pop()
         elif i == "entry":
-          item = database.add_item(path, convert_to_str(data[i]["title"]), ignore_existent = True)
-          path.append(item)
+          id = database.add_item(path[-1], convert_to_str(data[i]["title"]))
+          path.append(id)
           self.read_card(database, path, data[i])
           path.pop()
 
 
   def read_card(self, database, path, data):
-    print "---------- %s" % (path)
     for i in data:
       if i != "creation" and i != "expire" and i != "lastmod" and i != "lastaccess" and i != "icon":
         tmp = convert_to_str(data[i])
         if len(tmp.strip()) > 0:
-          ml = (tmp.find("\n") > 0)
-          detail = database.add_detail(path, convert_to_str(i), multiline = ml, ignore_existent = True)
-          print "%s = \"%s\"" % (detail, data[i])
-          database.set_detail(path, detail, tmp)
-    print ""
+          id = database.add_detail(path[-1], convert_to_str(i))
+          database.set_detail(id, tmp)
 
 # apenas para testes
 #gettext.install('pysafe', sys.path[0])

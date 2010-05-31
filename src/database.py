@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
-import gobject
-import pickle
-import gzip
+import pdb
 import os
+import sqlite3
+import sys
 from Crypto.Cipher import Blowfish
-from Crypto.Hash import MD5
 
 """
 Esta classe mantém as informações sobre os itens (grupos e seus itens internos)
@@ -12,255 +11,334 @@ Também salva e carrega do arquivo
 """
 class Dados:
 
-  VERSION = 2
+  __VERSION = 1
+
+  __FIELD_PASSWORD = -1
 
   DATABASE_OK = 0
   ARQUIVO_NAO_LOCALIZADO = 1
   SENHA_INVALIDA = 2
   DADOS_CORROMPIDOS = 3
+  SOMENTE_LEITURA = 4
 
-  def __init__(self, p, db = "%s/MyDocs/pysafe.db" % (os.path.expanduser('~'))):
-    self.password = p
-    self.database_file = db
-    self.changed = False
-    self.dados = {}
-    self.version = 1
-    #print "Database location: %s" % (db)
+  def __init__(self, db):
+    self.__connection = None
+    self.__blowfish = None
+    self.__databaseFile = db
+    self.__readonly = False
+
+    print "Database location: %s" % (db)
 
 
-  def load(self):
-    crypt = Blowfish.new(self.password)
-    md5 = MD5.new()
-
-    # le o arquivo compactado
-    try:
-      arch = gzip.GzipFile(self.database_file, 'rb')
-    except IOError:
+  def open(self, pwd):
+    if not os.path.exists(self.__databaseFile):
       return self.ARQUIVO_NAO_LOCALIZADO
-    buffer = ""
-    while True:
-      data = arch.read()
-      if data == "":
-        break
-      buffer += data
-    arch.close()
 
-    # teoricamente, descriptografa ele
-    dados_tmp = crypt.decrypt(buffer)
-    # valida a senha...segurança para saber se a senha é realmente válida
-    # e as informações podem ser descriptografadas corretamente
-    pos = dados_tmp.find("\n")
-    if pos == -1:
-      return self.SENHA_INVALIDA
-    senha = dados_tmp[:pos]
-    if senha != self.password:
-      return self.SENHA_INVALIDA
-
-    # chegou aqui, a senha confere...pode apagar!
-    dados_tmp = dados_tmp[pos + 1:]
-
-    if dados_tmp[:1] == "V":
-      # temos a versão no arquivo!
-      pos = dados_tmp.find("\n")
-      if pos == -1:
-        return self.DADOS_CORROMPIDOS
-      self.version = int(dados_tmp[1:pos])
-      dados_tmp = dados_tmp[pos + 1:]
-
-    # pega o MD5...
-    pos = dados_tmp.find("\n")
-    if pos == -1:
-      return self.DADOS_CORROMPIDOS
-    checksum = dados_tmp[:pos]
-
-    # remove o checksum para criar efetivamente os dados
-    dados_tmp = dados_tmp[pos + 1:].strip()
-    md5.update(dados_tmp)
-
-    if checksum != md5.hexdigest():
-      return self.DADOS_CORROMPIDOS
-
-    self.load_data(dados_tmp)
-
-    return self.DATABASE_OK
-
-
-  def save(self, force = False, new_pass = None):
-    if force == False and self.changed == False:
-      return True
-
-    if new_pass != None:
-      self.password = new_pass
-
-    crypt = Blowfish.new(self.password)
-    md5 = MD5.new()
-
-    # serializa os dados
-    dados_tmp = pickle.dumps(self.dados, 1)
-    # cria o MD5 deles
-    md5.update(dados_tmp)
-    # acrescenta a senha e o checksum
-    dados_tmp = "%s\nV%i\n%s\n%s" % (self.password, self.VERSION, md5.hexdigest(), dados_tmp)
-    # criptografa!
-    dados_tmp = crypt.encrypt(self.__fillWithSpace(dados_tmp))
-
-    # salva o arquivo compactado
+    # é um banco sqlite?
+    self.__connection = sqlite3.connect(self.__databaseFile)
+    self.__connection.text_factory = str
     try:
-      arch = gzip.GzipFile(self.database_file, "wb")
-    except IOError:
-      return False
-    arch.write(dados_tmp)
-    arch.close()
-    return True
+      self.__connection.cursor().execute("PRAGMA quick_check")
+    except sqlite3.DatabaseError:
+      return self.DADOS_CORROMPIDOS
 
+    # cria o objeto para criptografia
+    self.__blowfish = Blowfish.new(pwd)
 
-  def __fillWithSpace(self, s):
-    while len(s) % 8 != 0:
-      s = "%s " % (s)
-    return s
+    # valida a senha
+    c = self.__connection.cursor()
+    r = c.execute("select value from info where parent = ?", (self.__FIELD_PASSWORD,)).fetchone()
+    if r is None:
+      return self.DADOS_CORROMPIDOS
+    (p, ) = r
 
+    if self.__decrypt(p) != pwd:
+      self.__connection.close()
+      return self.SENHA_INVALIDA
 
-  def load_data(self, t):
-    if self.version == 1:
-      # é da versão anterior...converte para a versão nova!
-      temp = pickle.loads(t)
-      for i in temp.keys():
-        self.dados["g%s" % i] = {}
-        for j in temp[i]:
-          self.dados["g%s" % i]["i%s" % j] = {}
-          for k in temp[i][j]:
-            self.dados["g%s" % i]["i%s" % j]["d0%s" % k] = temp[i][j][k]
-      # informa que alterou para que seja salvo ao sair!
-      self.changed = True
-    elif self.version == 2:
-      self.dados = pickle.loads(t)
+    # verifica se pode alterar dados (banco somente leitura)
+    try:
+      c.execute("delete from V%i" % self.__VERSION)
+    except sqlite3.OperationalError:
+      self.__readonly = True
 
+    c.close()
 
-  def get(self, path = [], sublist = None):
-    if sublist == None:
-      sublist = self.dados
-    if path == None or len(path) == 0:
-      ret = []
-      for i in sublist:
-        ret.append(i)
-      return ret
+    if self.__readonly:
+      return self.SOMENTE_LEITURA
     else:
-      if path[0][:1] == "i":
-        return self.get_details(sublist[path[0]])
+      return self.DATABASE_OK
+
+
+  def close(self):
+    self.__connection.close()
+
+
+  def isReadOnly(self):
+    return self.__readonly
+
+
+  def __encrypt(self, txt, bf):
+    if bf is not None and txt is not None and len(txt) > 0:
+      tmp = "%i;%s" % (len(txt), txt)
+      pad_bytes = 8 - (len(tmp) % 8)
+      while pad_bytes > 0:
+        tmp = "%s " % tmp
+        pad_bytes -= 1
+      tmp = bf.encrypt(tmp)
+      return tmp.encode("hex")
+    else:
+      return txt
+
+
+  def __decrypt(self, txt):
+    if self.__blowfish is not None and txt is not None and len(txt) > 0:
+      tmp = self.__blowfish.decrypt(txt.decode("hex"))
+      p = tmp.find(";")
+      l = 0
+      try:
+        l = int(tmp[:p])
+      except ValueError:
+        return None
+      tmp = tmp[p + 1:p + l + 1]
+      return tmp
+    else:
+      return txt
+
+
+  def createDB(self, pwd):
+    connection = sqlite3.connect(self.__databaseFile)
+    c = connection.cursor()
+    c.execute("create table V%i (nothing integer primary key)" % self.__VERSION)
+    c.execute("create table info (id integer primary key, parent integer, type text, pos long, label text, value text)")
+    self.__blowfish = Blowfish.new(pwd)
+    c.execute("insert into info (parent, value) values (?, ?)", (self.__FIELD_PASSWORD, self.__encrypt(pwd, self.__blowfish)))
+    self.__blowfish = None
+    connection.commit()
+    c.close()
+    connection.close()
+
+
+  def changePassword(self, newpwd, progress = None):
+    if self.__readonly:
+      return False
+
+    # cria o blowfish para a nova senha
+    newbf = Blowfish.new(newpwd)
+
+    c = self.__connection.cursor()
+    ret = True
+    try:
+      rows = c.execute("select id, parent, label, value from info").fetchall()
+
+      for r in rows:
+        if progress is not None:
+          if progress.updateProgressBar(len(rows)):
+            ret = False
+            break
+        (id, parent, label, value) = r
+        l1 = self.__decrypt(label)
+        l2 = self.__encrypt(l1, newbf)
+        if parent == self.__FIELD_PASSWORD:
+          # o caso da senha deve ser diferente, pois não devo criptografar
+          # a senha antiga, mas sim a nova!!
+          v2 = self.__encrypt(newpwd, newbf)
+        else:
+          v1 = self.__decrypt(value)
+          v2 = self.__encrypt(v1, newbf)
+        c.execute("update info set label = ?, value = ? where id = ?", (l2, v2, id))
+
+      if ret:
+        self.__connection.commit()
       else:
-        return self.get(path[1:], sublist[path[0]])
+        self.__connection.rollback()
+    except:
+      # se deu qualquer erro, cancela tudo!
+      print "Error:", sys.exc_info()
+      self.__connection.rollback()
+      ret = False
+    c.close()
 
+    # se alterou com sucesso, fecha o banco e abre de novo
+    if ret:
+      self.close()
+      self.open(newpwd)
 
-  def get_details(self, sublist = None):
-    ret = {}
-    for i in sublist:
-      ret[i] = sublist[i]
     return ret
 
 
-  def __add_element(self, path, name):
-    temp = self.dados
-    i = 0
-    while i < len(path) and path[i][:1] == "g":
-      temp = temp[path[i]]
-      i = i + 1
-    #print "__add_element: %s" % name
-    temp[name] = {}
+  def get(self, parent = 0):
+    ret = []
+
+    c = self.__connection.cursor()
+    c.execute("select id, type, pos, label, value from info where parent = ? order by pos", (parent,))
+    while True:
+      r = c.fetchone()
+      if r is None:
+        break
+      (d1, d2, d3, d4, d5) = r
+      r = (d1, d2, d3, self.__decrypt(d4), self.__decrypt(d5))
+      ret.append(r)
+    c.close()
+    return ret
 
 
-  def add_group(self, path, name, ignore_existent = False):
-    name = "g%s" % name
+  def getCurrent(self, id = 0):
+    c = self.__connection.cursor()
+    c.execute("select id, type, pos, label, value, parent from info where id = ? order by pos", (id,))
+    ret = c.fetchone()
+    (d1, d2, d3, d4, d5, d6) = ret
+    ret = (d1, d2, d3, self.__decrypt(d4), self.__decrypt(d5), d6)
+    c.close()
+    return ret
 
+
+  def __add_element(self, parent, tipo, name, value = "", pos = 0):
+    if self.__readonly:
+      return None
+
+    c = self.__connection.cursor()
+    if tipo == "d":
+      # busca a maior posição...
+      (pos, ) = c.execute("select max(pos) from info where parent = ?", (parent,)).fetchone()
+      if pos == None:
+        pos = 0
+      else:
+        pos += 1
+
+    c.execute("insert into info (parent, type, pos, label, value) values (?,?,?,?,?)", (parent, tipo, pos, self.__encrypt(name, self.__blowfish), self.__encrypt(value, self.__blowfish), ))
+    id = c.lastrowid
+    self.__connection.commit()
+    c.close()
+    return id
+
+
+  def __removeElement(self, id, cursor = None):
+    if self.__readonly:
+      return
+
+    commit = cursor is None
+    if commit:
+      cursor = self.__connection.cursor()
+
+    # pega os possíveis filhos deste registro
+    rows = cursor.execute("select id from info where parent = ?", (id,)).fetchall()
+    # e manda apagar também!
+    for el in rows:
+      (i,) = el
+      self.__removeElement(i, cursor)
+
+    # altera o posicionamento se for detalhe
+    (parent, pos, tipo,) = cursor.execute("select parent, pos, type from info where id = ?", (id,)).fetchone()
+    if tipo == "d":
+      cursor.execute("update info set pos = pos - 1 where parent = ? and pos > ?", (parent, pos,))
+
+    # remove o registro
+    cursor.execute("delete from info where id = ?", (id,))
+
+    # deve fazer o commit e fechar o cursor?
+    if commit:
+      self.__connection.commit()
+      cursor.close()
+
+
+  def add_group(self, id, name):
     # grupos só podem ser adicionados a grupos....portanto
-    # remove do path tudo que não seja um grupo!
-    temp = []
-    for i in path:
-      if i[:1] == "g":
-        temp.append(i)
+    # busca o primeiro ID pai que não seja um grupo
+    parent = 0
+    while id > 0:
+      tmp = self.getCurrent(id)
+      if tmp is not None:
+        (id, tipo, pos, label, value, parent) = tmp
+        if tipo == "g":
+          parent = id
+          break
+        elif parent == 0:
+          break
 
-    if name in self.get(temp):
-      if ignore_existent:
-        return name
-      return None
-
-    self.__add_element(temp, name)
-    self.changed = True
-    return name
-
-
-  def del_group(self, path):
-    temp = self.dados
-    i = 0
-    while i < len(path) - 1 and path[i][:1] == "g":
-      temp = temp[path[i]]
-      i = i + 1
-    del temp[path[i]]
-    self.changed = True
+    id = self.__add_element(parent, "g", name)
+    return id
 
 
-  def add_item(self, path, name, ignore_existent = False):
-    name = "i%s" % name
+  def delItem(self, id):
+    self.__removeElement(id)
 
+
+  def add_item(self, id, name):
     # itens só podem ser adicionados a grupos....portanto
-    # remove do path tudo que não seja um grupo!
-    temp = []
-    for i in path:
-      if i[:1] == "g":
-        temp.append(i)
+    # busca o primeiro ID pai que não seja um item
+    parent = id
+    while parent > 0:
+      tmp = self.getCurrent(id)
+      if tmp is None:
+        parent = 0
+      else:
+        (id1, tipo, pos, label, value, parent1) = tmp
+        if tipo == "g":
+          break
+        else:
+          parent = parent1
 
-    if name in self.get(temp):
-      if ignore_existent:
-        return name
+    id = self.__add_element(parent, "i", name)
+    return id
+
+
+  def add_detail(self, parent, name):
+    return self.__add_element(parent, "d", name)
+
+
+  def del_detail(self, id):
+    self.__removeElement(id)
+
+
+  def set_detail(self, id, value = ""):
+    if self.__readonly:
+      return
+
+    c = self.__connection.cursor()
+    c.execute("update info set value = ? where id = ?", (self.__encrypt(value, self.__blowfish), id))
+    self.__connection.commit()
+    c.close()
+
+
+  def moveDetail(self, id, dir):
+    if self.__readonly:
       return None
 
-    self.__add_element(temp, name)
-    self.changed = True
-    return name
+    c = self.__connection.cursor()
 
-
-  def del_item(self, path):
-    temp = self.dados
-    i = 0
-    while i < len(path) and path[i][:1] != "i":
-      temp = temp[path[i]]
-      i = i + 1
-    if path[-1] in temp:
-      del temp[path[-1]]
-      self.changed = True
-
-
-  def add_detail(self, path, name, multiline = False, ignore_existent = False):
-    if multiline:
-      name = "d1%s" % name
-    else:
-      name = "d0%s" % name
-
-    if name in self.get(path):
-      if ignore_existent:
-        return name
+    c.execute("select pos, parent, type from info where id = ?", (id,))
+    tmp = c.fetchone()
+    if tmp is None:
+      c.close()
       return None
+    (pos, parent, tipo) = tmp
 
-    self.set_detail(path, name)
-    return name
+    posNew = pos + dir
+
+    # busca pelo registro que este vai deslocar
+    c.execute("select id from info where parent = ? and type = ? and pos = ?", (parent, tipo, posNew,))
+    tmp = c.fetchone()
+    if tmp is None:
+      c.close()
+      return None
+    (idNew, ) = tmp
+
+    # troca as posições
+    c.execute("update info set pos = ? where id = ?", (posNew, id,))
+    c.execute("update info set pos = ? where id = ?", (pos, idNew,))
+
+    self.__connection.commit()
+    c.close()
+
+    return id
 
 
-  def del_detail(self, path, name):
-    self.changed = True
+  def rename(self, id, label):
+    if self.__readonly:
+      return
 
-    temp = self.dados
-    i = 0
-    while i < len(path):
-      temp = temp[path[i]]
-      i = i + 1
-    del temp[name]
-
-
-  def set_detail(self, path, name, value = ""):
-    self.changed = True
-
-    temp = self.dados
-    i = 0
-    while i < len(path):
-      temp = temp[path[i]]
-      i = i + 1
-    temp[name] = value
+    c = self.__connection.cursor()
+    c.execute("update info set label = ? where id = ?", (self.__encrypt(label, self.__blowfish), id,))
+    self.__connection.commit()
+    c.close()
