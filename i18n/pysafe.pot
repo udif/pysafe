@@ -5,197 +5,222 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2010-02-05 00:53+BRST\n"
+"POT-Creation-Date: 2010-05-26 23:41+BRT\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: ENCODING\n"
 "Generated-By: pygettext.py 1.5\n"
 
 
-#: fremantle.py:36
-msgid "Add group"
-msgstr ""
 
-#: fremantle.py:41
-msgid "Remove group"
-msgstr ""
 
-#: fremantle.py:46
-msgid "Add item"
-msgstr ""
-
-#: fremantle.py:51
-msgid "Remove item"
-msgstr ""
-
-#: fremantle.py:56
-msgid "Change password"
-msgstr ""
-
-#: fremantle.py:61
-msgid "About"
-msgstr ""
-
-#: fremantle.py:66
-msgid "Add detail"
-msgstr ""
-
-#: fremantle.py:71
-msgid "Remove detail"
-msgstr ""
-
-#: fremantle.py:76
-msgid "Import"
-msgstr ""
-
-#: fremantle.py:162
-msgid "The database could not be updated. Check file permissions or disk space."
-msgstr ""
-
-#: fremantle.py:223 fremantle.py:306
-msgid "Done"
-msgstr ""
-
-#: fremantle.py:226
-msgid "New Group"
-msgstr ""
-
-#: fremantle.py:228
-msgid "New Group in \"%s\""
-msgstr ""
-
-#: fremantle.py:229 fremantle.py:264 fremantle.py:312
-msgid "Name"
-msgstr ""
-
-#: fremantle.py:243
-msgid "The group \"%s\" already exists!"
-msgstr ""
-
-#: fremantle.py:247
-msgid "Are you sure you want to remove the group \"%s\" and all its items?"
-msgstr ""
-
-#: fremantle.py:261
-msgid "New Item"
-msgstr ""
-
-#: fremantle.py:263
-msgid "New Item for Group \"%s\""
-msgstr ""
-
-#: fremantle.py:286
-msgid "The item \"%s\" already exists!"
-msgstr ""
-
-#: fremantle.py:292
-msgid "Are you sure you want to remove the item \"%s\" from the group \"%s\"?"
-msgstr ""
-
-#: fremantle.py:294
-msgid "Are you sure you want to remove the item \"%s\"?"
-msgstr ""
-
-#: fremantle.py:309
-msgid "New Detail for Item \"%s\""
-msgstr ""
-
-#: fremantle.py:311
-msgid "New Detail for Item \"%s\" in Group \"%s\""
-msgstr ""
-
-#: fremantle.py:320
-msgid "The detail \"%s\" already exists!"
-msgstr ""
-
-#: fremantle.py:497
-msgid "Type your new password"
-msgstr ""
-
-#: fremantle.py:506 fremantle.py:785
-msgid "The password can not be empty!"
-msgstr ""
-
-#: fremantle.py:514
-msgid "Re-type your new password"
-msgstr ""
-
-#: fremantle.py:522 fremantle.py:814
-msgid "The passwords are not equals!"
-msgstr ""
-
-#: fremantle.py:527
-msgid "Password changed!"
-msgstr ""
-
-#: fremantle.py:553
-msgid "Choose details to delete"
-msgstr ""
-
-#: fremantle.py:553
-msgid "Delete"
-msgstr ""
-
-#: fremantle.py:636
+#: src/import_data.py:28
 msgid "Import Wizard"
 msgstr ""
 
-#: fremantle.py:677
-msgid "This wizard will guide you through the importing data process."
-msgstr ""
-
-#: fremantle.py:678
-msgid "File location"
-msgstr ""
-
-#: fremantle.py:679
-msgid "File type"
-msgstr ""
-
-#: fremantle.py:776
-msgid "Type your password"
-msgstr ""
-
-#: fremantle.py:795
-msgid "The database are not updataple. Check file permissions or disk space."
-msgstr ""
-
-#: fremantle.py:798
-msgid "Database file not found. Confirm the creation of a new one?"
-msgstr ""
-
-#: fremantle.py:806
-msgid "Re-type your password"
-msgstr ""
-
-#: fremantle.py:821
-msgid "An undefined error has ocurred!"
-msgstr ""
-
-#: fremantle.py:823
-msgid "Invalid password!"
-msgstr ""
-
-#: fremantle.py:825
-msgid "Database corrupted or invalid password!"
-msgstr ""
-
-#: import_data.py:16
+#: src/import_data.py:46 src/import_data.py:142
 msgid "File \"%s\" does not exist or it was not possible open it."
 msgstr ""
 
-#: import_data.py:21
+#: src/import_data.py:53
+msgid "This wizard will guide you through the importing process."
+msgstr ""
+
+#: src/import_data.py:156
 msgid "The file format parameter was not recognized."
 msgstr ""
 
-#: import_data.py:63
-msgid "Handy Safe Pro"
+#: src/import_data.py:161
+msgid "Handy Safe Pro (text)"
 msgstr ""
 
-#: import_data.py:112
+#: src/import_data.py:162
+msgid "Handy Safe Pro (xml)"
+msgstr ""
+
+#: src/import_data.py:163
+msgid "KeePassX (xml)"
+msgstr ""
+
+#: src/import_data.py:164
+msgid "Keyring for PalmOS (xml)"
+msgstr ""
+
+#: src/import_data.py:253 src/import_data.py:306 src/import_data.py:339
 msgid "Note"
+msgstr ""
+
+#: src/mainwindow.py:147
+msgid "Change password"
+msgstr ""
+
+#: src/mainwindow.py:150
+msgid "About"
+msgstr ""
+
+#: src/mainwindow.py:153
+msgid "Import"
+msgstr ""
+
+#: src/mainwindow.py:272
+msgid "New group"
+msgstr ""
+
+#: src/mainwindow.py:274
+msgid "New group in \"%s\""
+msgstr ""
+
+#: src/mainwindow.py:287
+msgid "New item"
+msgstr ""
+
+#: src/mainwindow.py:289
+msgid "New item in group \"%s\""
+msgstr ""
+
+#: src/mainwindow.py:304
+msgid "Are you sure you want to remove the group \"%s\" and all its items?"
+msgstr ""
+
+#: src/mainwindow.py:307
+msgid "Are you sure you want to remove the item \"%s\" from the group \"%s\"?"
+msgstr ""
+
+#: src/mainwindow.py:309
+msgid "Are you sure you want to remove the item \"%s\"?"
+msgstr ""
+
+#: src/mainwindow.py:362
+msgid "New detail for item \"%s\""
+msgstr ""
+
+#: src/mainwindow.py:364
+msgid "New detail for item \"%s\" in group \"%s\""
+msgstr ""
+
+#: src/mainwindow.py:524
+msgid "Type your new password"
+msgstr ""
+
+#: src/mainwindow.py:529 src/mainwindow.py:1023
+msgid "The password can not be empty!"
+msgstr ""
+
+#: src/mainwindow.py:533
+msgid "Retype your new password"
+msgstr ""
+
+#: src/mainwindow.py:538
+msgid "The passwords are not equals!"
+msgstr ""
+
+#: src/mainwindow.py:540
+msgid "Changing password..."
+msgstr ""
+
+#: src/mainwindow.py:540 src/upgrade.py:75
+msgid "Cancel"
+msgstr ""
+
+#: src/mainwindow.py:546
+msgid "Password changed!"
+msgstr ""
+
+#: src/mainwindow.py:549
+msgid "The password was not changed!"
+msgstr ""
+
+#: src/mainwindow.py:551
+msgid "There was an error and the password was not changed!"
+msgstr ""
+
+#: src/mainwindow.py:940
+msgid "Group"
+msgstr ""
+
+#: src/mainwindow.py:942
+msgid "Item"
+msgstr ""
+
+#: src/mainwindow.py:944
+msgid "Detail name"
+msgstr ""
+
+#: src/mainwindow.py:946
+msgid "Detail text"
+msgstr ""
+
+#: src/mainwindow.py:948
+msgid "Find"
+msgstr ""
+
+#: src/mainwindow.py:1018 src/upgrade.py:337
+msgid "Type your password"
+msgstr ""
+
+#: src/mainwindow.py:1030
+msgid "The database are not updataple. Check file permissions or disk space."
+msgstr ""
+
+#: src/mainwindow.py:1033
+msgid "Database file not found: %s"
+msgstr ""
+
+#: src/mainwindow.py:1036 src/upgrade.py:65 src/upgrade.py:105
+msgid "An undefined error has ocurred!"
+msgstr ""
+
+#: src/mainwindow.py:1038 src/upgrade.py:69 src/upgrade.py:109
+msgid "Invalid password!"
+msgstr ""
+
+#: src/mainwindow.py:1040 src/upgrade.py:71 src/upgrade.py:111
+msgid "Database corrupted or invalid password!"
+msgstr ""
+
+#: src/upgrade.py:42
+msgid "Upgrade Wizard"
+msgstr ""
+
+#: src/upgrade.py:55 src/upgrade.py:297
+msgid "The file \"%s\" already exists. Overwrite?"
+msgstr ""
+
+#: src/upgrade.py:67
+msgid "Database file not found. There was an error creating the database."
+msgstr ""
+
+#: src/upgrade.py:75
+msgid "Importing..."
+msgstr ""
+
+#: src/upgrade.py:107
+msgid "Database file not found"
+msgstr ""
+
+#: src/upgrade.py:123
+msgid "This wizard will guide you through the upgrading process.\n\nThe database will be converted to the new format."
+msgstr ""
+
+#: src/upgrade.py:136
+msgid "Type your current password"
+msgstr ""
+
+#: src/upgrade.py:155 src/upgrade.py:366
+msgid "Enter the database name and location"
+msgstr ""
+
+#: src/upgrade.py:284
+msgid "Setup Wizard"
+msgstr ""
+
+#: src/upgrade.py:324
+msgid "This wizard will guide you through the setup process."
+msgstr ""
+
+#: src/upgrade.py:340
+msgid "Retype your password"
 msgstr ""
 
