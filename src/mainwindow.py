@@ -263,9 +263,9 @@ class MainWindow(QMainWindow):
         (id1, tipo, pos, label, value, id) = tmp
         if tipo == "g":
           if len(ret) == 0:
-            ret = label
+            ret = QString.fromUtf8(label)
           else:
-            ret = "%s -> %s" % (label, ret)
+            ret = "%s -> %s" % (QString.fromUtf8(label), ret)
     return ret
 
 
@@ -273,7 +273,7 @@ class MainWindow(QMainWindow):
     grupos = self.__get_group_path_string()
     title = _("New group")
     if len(grupos) > 0:
-      title = (_("New group in \"%s\"") % grupos)
+      title = _("New group in \"%s\"") % grupos
     (text, response) = QInputDialog.getText(self, " ", title)
 
     if response == True:
