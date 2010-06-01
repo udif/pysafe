@@ -298,10 +298,15 @@ class handy_safe_pro_xml:
     #item = database.add_item(path, data["name"], ignore_existent = True)
     #path.append(item)
 
-    for i in field:
-      if "_text" in i:
-        id = database.add_detail(path[-1], convert_to_str(i["name"]))
-        database.set_detail(id, convert_to_str(i["_text"]))
+    if type(field) is list:
+      for i in field:
+        if "_text" in i:
+          id = database.add_detail(path[-1], convert_to_str(i["name"]))
+          database.set_detail(id, convert_to_str(i["_text"]))
+    elif type(field) is dict:
+      if "_text" in field:
+        id = database.add_detail(path[-1], convert_to_str(field["name"]))
+        database.set_detail(id, convert_to_str(field["_text"]))
     if "Note" in data:
       id = database.add_detail(path[-1], _("Note"))
       database.set_detail(id, convert_to_str(data["Note"]))
