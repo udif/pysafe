@@ -11,7 +11,7 @@ Também salva e carrega do arquivo
 """
 class Dados:
 
-  __VERSION = 1
+  __VERSION = 2
 
   __FIELD_PASSWORD = -1
 
@@ -26,6 +26,7 @@ class Dados:
     self.__blowfish = None
     self.__databaseFile = db
     self.__readonly = False
+    self.__inTransaction = False
 
     print "Database location: %s" % (db)
 
@@ -55,6 +56,9 @@ class Dados:
     if self.__decrypt(p) != pwd:
       self.__connection.close()
       return self.SENHA_INVALIDA
+
+    # verifica se é a última versão do banco de dados
+    self.__checkVersion(c)
 
     # verifica se pode alterar dados (banco somente leitura)
     try:
@@ -106,11 +110,24 @@ class Dados:
       return txt
 
 
+  def __checkVersion(self, c):
+    (row,) = c.execute("SELECT name from sqlite_master WHERE name like 'V%'").fetchone()
+    if "V%i" % self.__VERSION == row:
+      return
+
+    # altera as tabelas conforme a versão atual
+    if row == "V1":
+      c.execute("alter table info add column timestamp integer")
+
+    # coloca a versão correta na tabela
+    c.execute("alter table %s rename to 'V%i'" % (row, self.__VERSION))
+
+
   def createDB(self, pwd):
     connection = sqlite3.connect(self.__databaseFile)
     c = connection.cursor()
     c.execute("create table V%i (nothing integer primary key)" % self.__VERSION)
-    c.execute("create table info (id integer primary key, parent integer, type text, pos long, label text, value text)")
+    c.execute("create table info (id integer primary key, parent integer, type text, pos long, label text, value text, timestamp integer)")
     self.__blowfish = Blowfish.new(pwd)
     c.execute("insert into info (parent, value) values (?, ?)", (self.__FIELD_PASSWORD, self.__encrypt(pwd, self.__blowfish)))
     self.__blowfish = None
@@ -206,9 +223,10 @@ class Dados:
       else:
         pos += 1
 
-    c.execute("insert into info (parent, type, pos, label, value) values (?,?,?,?,?)", (parent, tipo, pos, self.__encrypt(name, self.__blowfish), self.__encrypt(value, self.__blowfish), ))
+    c.execute("insert into info (parent, type, pos, label, value, timestamp) values (?,?,?,?,?,strftime('%s','now'))", (parent, tipo, pos, self.__encrypt(name, self.__blowfish), self.__encrypt(value, self.__blowfish), ))
     id = c.lastrowid
-    self.__connection.commit()
+    if not self.__inTransaction:
+      self.__connection.commit()
     c.close()
     return id
 
@@ -235,6 +253,9 @@ class Dados:
 
     # remove o registro
     cursor.execute("delete from info where id = ?", (id,))
+
+    # marca o "pai" como alterado
+    cursor.execute("update info set timestamp = strftime('%s','now') where id = ?", (parent,))
 
     # deve fazer o commit e fechar o cursor?
     if commit:
@@ -296,8 +317,9 @@ class Dados:
       return
 
     c = self.__connection.cursor()
-    c.execute("update info set value = ? where id = ?", (self.__encrypt(value, self.__blowfish), id))
-    self.__connection.commit()
+    c.execute("update info set value = ?, timestamp = strftime('%s','now') where id = ?", (self.__encrypt(value, self.__blowfish), id))
+    if not self.__inTransaction:
+      self.__connection.commit()
     c.close()
 
 
@@ -339,6 +361,22 @@ class Dados:
       return
 
     c = self.__connection.cursor()
-    c.execute("update info set label = ? where id = ?", (self.__encrypt(label, self.__blowfish), id,))
+    c.execute("update info set label = ?, timestamp = strftime('%s','now') where id = ?", (self.__encrypt(label, self.__blowfish), id,))
     self.__connection.commit()
     c.close()
+
+
+  def beginTransaction(self):
+    self.__inTransaction = True
+
+
+  def commitTransaction(self):
+    if self.__inTransaction:
+      self.__inTransaction = False
+      self.__connection.commit()
+
+
+  def rollbackTransaction(self):
+    if self.__inTransaction:
+      self.__inTransaction = False
+      self.__connection.rollback()
