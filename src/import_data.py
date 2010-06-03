@@ -18,7 +18,7 @@ def convert_to_str(value):
 
 class ImportWizard(QWizard):
 
-  def __init__(self, parent, database):
+  def __init__(self, parent, database, progress):
     QWizard.__init__(self, parent)
 
     self.import_type = QListView()
@@ -33,7 +33,7 @@ class ImportWizard(QWizard):
 
     while self.exec_():
       if self.filetype != None and type(self.filetype) is int:
-        import_from_file(database, self.field("filename").toString(), self.filetype)
+        import_from_file(database, progress, self.field("filename").toString(), self.filetype)
         break
 
 
@@ -137,23 +137,26 @@ class import_from_file:
     file_name - file name
     file_format - file format
   """
-  def __init__(self, database, file_name, file_format):
+  def __init__(self, database, progress, file_name, file_format):
     if not os.path.isfile(file_name):
       raise IOError, _("File \"%s\" does not exist or it was not possible open it.") % file_name
 
     if type(file_name) is not str:
       file_name = str(file_name)
 
+    progress.show()
+    database.beginTransaction()
     if file_format == self.HANDY_SAFE_PRO_TEXT:
-      handy_safe_pro_text(database, file_name)
+      handy_safe_pro_text(database, progress, file_name)
     elif file_format == self.HANDY_SAFE_PRO_XML:
-      handy_safe_pro_xml(database, file_name)
+      handy_safe_pro_xml(database, progress, file_name)
     elif file_format == self.PALM_KEYRING_XML:
-      palm_keyring_xml(database, file_name)
+      palm_keyring_xml(database, progress, file_name)
     elif file_format == self.KEEPASSX_XML:
-      keepassx_xml(database, file_name)
+      keepassx_xml(database, progress, file_name)
     else:
       raise AttributeError, _("The file format parameter was not recognized.")
+    database.commitTransaction()
 
 
   @staticmethod
@@ -164,19 +167,40 @@ class import_from_file:
            import_from_file.PALM_KEYRING_XML: _("Keyring for PalmOS (xml)")}
     return ret
 
+
+  @staticmethod
+  def count(obj, contador = 0):
+    if type(obj) is dict:
+      keys = obj.keys()
+      contador += len(keys)
+      for i in keys:
+        contador = import_from_file.count(obj[i], contador)
+    elif type(obj) is list:
+      contador += len(obj)
+      for i in obj:
+        contador = import_from_file.count(i, contador)
+    return contador
+
+
 """
 Classe responsável por ler os dados de um arquivo texto.
 """
 class handy_safe_pro_text:
 
-  def __init__(self, database, file_name):
+  def __init__(self, database, progress, file_name):
     file = open(file_name, "r")
+    lines = file.readlines()
+    file.close()
     state = 0
     block = ""
-    while True:
-      line = convert_to_str(file.readline())
-      if len(line) == 0:
+    #while True:
+    for line in lines:
+      if progress.updateProgressBar(len(lines)):
+        database.rollbackTransaction()
         break
+      #line = convert_to_str(file.readline())
+      #if len(line) == 0:
+      #  break
 
       # remove o fim de linha
       #line = line.rstrip("\n")
@@ -202,8 +226,6 @@ class handy_safe_pro_text:
         state = 2
 
       block = "%s%s" % (block, line)
-
-    file.close()
 
     self.read_handy_safe_pro_text_block(database, block)
 
@@ -259,15 +281,20 @@ Classe responsável por ler os dados de um arquivo XML, no formato do Handy Safe
 """
 class handy_safe_pro_xml:
 
-  def __init__(self, database, file_name):
+  def __init__(self, database, progress, file_name):
     data = xml_util.ConvertXmlToDict(file_name)
-    self.read(database, data["HandySafe"])
+    self.__total = import_from_file.count(data)
+    self.__progress = progress
+    if not self.read(database, data["HandySafe"]):
+      database.rollbackTransaction()
 
 
   def read(self, database, data, path = [0]):
     for i in data:
       if type(data[i]) is list:
         for j in data[i]:
+          if self.__progress.updateProgressBar(self.__total):
+            return False
           if i == "Folder":
             id = database.add_group(path[-1], convert_to_str(j["name"]))
             path.append(id)
@@ -279,6 +306,8 @@ class handy_safe_pro_xml:
             self.read_card(database, path, j)
             path.pop()
       elif type(data[i]) is dict:
+        if self.__progress.updateProgressBar(self.__total):
+          return False
         if i == "Card":
           id = database.add_item(path[-1], convert_to_str(data[i]["name"]))
           path.append(id)
@@ -290,6 +319,8 @@ class handy_safe_pro_xml:
           self.read(database, data[i], path)
           path.pop()
 
+    return True
+
 
   def read_card(self, database, path, data):
     name = data["name"]
@@ -300,10 +331,14 @@ class handy_safe_pro_xml:
 
     if type(field) is list:
       for i in field:
+        if self.__progress.updateProgressBar(self.__total):
+          return False
         if "_text" in i:
           id = database.add_detail(path[-1], convert_to_str(i["name"]))
           database.set_detail(id, convert_to_str(i["_text"]))
     elif type(field) is dict:
+      if self.__progress.updateProgressBar(self.__total):
+        return False
       if "_text" in field:
         id = database.add_detail(path[-1], convert_to_str(field["name"]))
         database.set_detail(id, convert_to_str(field["_text"]))
@@ -311,26 +346,34 @@ class handy_safe_pro_xml:
       id = database.add_detail(path[-1], _("Note"))
       database.set_detail(id, convert_to_str(data["Note"]))
 
+    return True
+
 
 """
 Classe responsável por ler os dados de um arquivo XML, no formato do Keyring para PalmOS.
 """
 class palm_keyring_xml:
 
-  def __init__(self, database, file_name):
+  def __init__(self, database, progress, file_name):
     data = xml_util.ConvertXmlToDict(file_name)
-    self.read(database, data["pwlist"])
+    self.__total = import_from_file.count(data)
+    self.__progress = progress
+    if not self.read(database, data["pwlist"]):
+      database.rollbackTransaction()
 
 
   def read(self, database, data, path = [0]):
     for i in data:
-
       if type(data[i]) is list:
         for j in data[i]:
+          if self.__progress.updateProgressBar(self.__total):
+            return False
           id = database.add_group(path[-1], convert_to_str(j["category"]))
           path.append(id)
           self.read_item(database, path, j)
           path.pop()
+
+    return True
 
 
   def read_item(self, database, path, data):
@@ -355,7 +398,7 @@ Classe responsável por ler os dados de um arquivo XML, no formato do Keyring pa
 """
 class keepassx_xml:
 
-  def __init__(self, database, file_name):
+  def __init__(self, database, progress, file_name):
     file = open(file_name, "r")
     buffer = ""
     while True:
@@ -372,14 +415,18 @@ class keepassx_xml:
     tmp.flush()
     data = xml_util.ConvertXmlToDict(tmp.name)
     tmp.close()
-    self.read(database, data["database"])
+    self.__total = import_from_file.count(data)
+    self.__progress = progress
+    if not self.read(database, data["database"]):
+      database.rollbackTransaction()
 
 
   def read(self, database, data, path = [0]):
     for i in data:
-
       if type(data[i]) is list:
         for j in data[i]:
+          if self.__progress.updateProgressBar(self.__total):
+            return False
           if i == "group":
             id = database.add_group(path[-1], convert_to_str(j["title"]))
             path.append(id)
@@ -391,6 +438,8 @@ class keepassx_xml:
             self.read_card(database, path, j)
             path.pop()
       elif type(data[i]) is dict:
+        if self.__progress.updateProgressBar(self.__total):
+          return False
         if i == "group":
           id = database.add_group(path[-1], convert_to_str(data[i]["title"]))
           path.append(id)
