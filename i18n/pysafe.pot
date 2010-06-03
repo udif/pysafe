@@ -5,14 +5,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2010-05-26 23:41+BRT\n"
+"POT-Creation-Date: 2010-06-02 22:03+BRT\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: ENCODING\n"
 "Generated-By: pygettext.py 1.5\n"
-
 
 
 
@@ -28,27 +28,27 @@ msgstr ""
 msgid "This wizard will guide you through the importing process."
 msgstr ""
 
-#: src/import_data.py:156
+#: src/import_data.py:158
 msgid "The file format parameter was not recognized."
 msgstr ""
 
-#: src/import_data.py:161
+#: src/import_data.py:164
 msgid "Handy Safe Pro (text)"
 msgstr ""
 
-#: src/import_data.py:162
+#: src/import_data.py:165
 msgid "Handy Safe Pro (xml)"
 msgstr ""
 
-#: src/import_data.py:163
+#: src/import_data.py:166
 msgid "KeePassX (xml)"
 msgstr ""
 
-#: src/import_data.py:164
+#: src/import_data.py:167
 msgid "Keyring for PalmOS (xml)"
 msgstr ""
 
-#: src/import_data.py:253 src/import_data.py:306 src/import_data.py:339
+#: src/import_data.py:275 src/import_data.py:346 src/import_data.py:387
 msgid "Note"
 msgstr ""
 
@@ -64,163 +64,182 @@ msgstr ""
 msgid "Import"
 msgstr ""
 
-#: src/mainwindow.py:272
+#: src/mainwindow.py:251 src/upgrade.py:89
+msgid "Importing..."
+msgstr ""
+
+#: src/mainwindow.py:280
 msgid "New group"
 msgstr ""
 
-#: src/mainwindow.py:274
+#: src/mainwindow.py:282
 msgid "New group in \"%s\""
 msgstr ""
 
-#: src/mainwindow.py:287
+#: src/mainwindow.py:295
 msgid "New item"
 msgstr ""
 
-#: src/mainwindow.py:289
+#: src/mainwindow.py:297
 msgid "New item in group \"%s\""
 msgstr ""
 
-#: src/mainwindow.py:304
+#: src/mainwindow.py:312
 msgid "Are you sure you want to remove the group \"%s\" and all its items?"
 msgstr ""
 
-#: src/mainwindow.py:307
+#: src/mainwindow.py:315
 msgid "Are you sure you want to remove the item \"%s\" from the group \"%s\"?"
 msgstr ""
 
-#: src/mainwindow.py:309
+#: src/mainwindow.py:317
 msgid "Are you sure you want to remove the item \"%s\"?"
 msgstr ""
 
-#: src/mainwindow.py:362
+#: src/mainwindow.py:370
 msgid "New detail for item \"%s\""
 msgstr ""
 
-#: src/mainwindow.py:364
+#: src/mainwindow.py:372
 msgid "New detail for item \"%s\" in group \"%s\""
 msgstr ""
 
-#: src/mainwindow.py:524
+#: src/mainwindow.py:527
 msgid "Type your new password"
 msgstr ""
 
-#: src/mainwindow.py:529 src/mainwindow.py:1023
+#: src/mainwindow.py:532 src/mainwindow.py:1081
 msgid "The password can not be empty!"
 msgstr ""
 
-#: src/mainwindow.py:533
+#: src/mainwindow.py:536
 msgid "Retype your new password"
 msgstr ""
 
-#: src/mainwindow.py:538
+#: src/mainwindow.py:541 src/upgrade.py:360 src/upgrade.py:381
 msgid "The passwords are not equals!"
 msgstr ""
 
-#: src/mainwindow.py:540
+#: src/mainwindow.py:543
 msgid "Changing password..."
 msgstr ""
 
 #: src/mainwindow.py:540 src/upgrade.py:75
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
-#: src/mainwindow.py:546
+#: src/mainwindow.py:547
 msgid "Password changed!"
 msgstr ""
 
-#: src/mainwindow.py:549
+#: src/mainwindow.py:550
 msgid "The password was not changed!"
 msgstr ""
 
-#: src/mainwindow.py:551
+#: src/mainwindow.py:552
 msgid "There was an error and the password was not changed!"
 msgstr ""
 
-#: src/mainwindow.py:940
+#: src/mainwindow.py:979
 msgid "Group"
 msgstr ""
 
-#: src/mainwindow.py:942
+#: src/mainwindow.py:981
 msgid "Item"
 msgstr ""
 
-#: src/mainwindow.py:944
+#: src/mainwindow.py:983
 msgid "Detail name"
 msgstr ""
 
-#: src/mainwindow.py:946
+#: src/mainwindow.py:985
 msgid "Detail text"
 msgstr ""
 
-#: src/mainwindow.py:948
+#: src/mainwindow.py:987
 msgid "Find"
 msgstr ""
 
-#: src/mainwindow.py:1018 src/upgrade.py:337
+#: src/mainwindow.py:1043
+msgid "An error has ocurred and a log was saved in \"%s\".\n\nSend it to the developer: pysafe@aguilarj.com."
+msgstr ""
+
+#: src/mainwindow.py:1043
+msgid "Error!"
+msgstr ""
+
+#: src/mainwindow.py:1076 src/upgrade.py:401
 msgid "Type your password"
 msgstr ""
 
-#: src/mainwindow.py:1030
+#: src/mainwindow.py:1088
 msgid "The database are not updataple. Check file permissions or disk space."
 msgstr ""
 
-#: src/mainwindow.py:1033
-msgid "Database file not found: %s"
+#: src/mainwindow.py:1091
+msgid "Database file not found:\n\"%s\""
 msgstr ""
 
-#: src/mainwindow.py:1036 src/upgrade.py:65 src/upgrade.py:105
+#: src/mainwindow.py:1094 src/upgrade.py:79 src/upgrade.py:122
+#: src/upgrade.py:346
 msgid "An undefined error has ocurred!"
 msgstr ""
 
-#: src/mainwindow.py:1038 src/upgrade.py:69 src/upgrade.py:109
+#: src/mainwindow.py:1096 src/upgrade.py:83 src/upgrade.py:126
+#: src/upgrade.py:350
 msgid "Invalid password!"
 msgstr ""
 
-#: src/mainwindow.py:1040 src/upgrade.py:71 src/upgrade.py:111
+#: src/mainwindow.py:1098 src/upgrade.py:85 src/upgrade.py:128
+#: src/upgrade.py:352
 msgid "Database corrupted or invalid password!"
 msgstr ""
 
-#: src/upgrade.py:42
+#: src/upgrade.py:43
 msgid "Upgrade Wizard"
 msgstr ""
 
-#: src/upgrade.py:55 src/upgrade.py:297
+#: src/upgrade.py:69
 msgid "The file \"%s\" already exists. Overwrite?"
 msgstr ""
 
-#: src/upgrade.py:67
+#: src/upgrade.py:81 src/upgrade.py:348
 msgid "Database file not found. There was an error creating the database."
 msgstr ""
 
-#: src/upgrade.py:75
-msgid "Importing..."
-msgstr ""
-
-#: src/upgrade.py:107
+#: src/upgrade.py:124
 msgid "Database file not found"
 msgstr ""
 
-#: src/upgrade.py:123
+#: src/upgrade.py:140
 msgid "This wizard will guide you through the upgrading process.\n\nThe database will be converted to the new format."
 msgstr ""
 
-#: src/upgrade.py:136
+#: src/upgrade.py:153 src/upgrade.py:430
 msgid "Type your current password"
 msgstr ""
 
-#: src/upgrade.py:155 src/upgrade.py:366
+#: src/upgrade.py:172 src/upgrade.py:449
 msgid "Enter the database name and location"
 msgstr ""
 
-#: src/upgrade.py:284
+#: src/upgrade.py:303
 msgid "Setup Wizard"
 msgstr ""
 
-#: src/upgrade.py:324
+#: src/upgrade.py:388
 msgid "This wizard will guide you through the setup process."
 msgstr ""
 
-#: src/upgrade.py:340
+#: src/upgrade.py:404
 msgid "Retype your password"
+msgstr ""
+
+#: src/upgrade.py:459
+msgid "Overwrite"
+msgstr ""
+
+#: src/upgrade.py:462
+msgid "(if unchecked and the file exists will try to use it)"
 msgstr ""
 

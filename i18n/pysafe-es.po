@@ -64,6 +64,10 @@ msgstr "Acerca"
 msgid "Import"
 msgstr "Importar"
 
+#: src/mainwindow.py:251 src/upgrade.py:89
+msgid "Importing..."
+msgstr "Importando..."
+
 #: src/mainwindow.py:272
 msgid "New group"
 msgstr "Nuevo grupo"
@@ -156,6 +160,14 @@ msgstr "Texto del detalle"
 msgid "Find"
 msgstr "Buscar"
 
+#: src/mainwindow.py:1043
+msgid "An error has ocurred and a log was saved in \"%s\".\n\nSend it to the developer: pysafe@aguilarj.com."
+msgstr ""
+
+#: src/mainwindow.py:1043
+msgid "Error!"
+msgstr ""
+
 #: src/mainwindow.py:1018 src/upgrade.py:337
 msgid "Type your password"
 msgstr "Escriba su contraseña"
@@ -165,8 +177,8 @@ msgid "The database are not updataple. Check file permissions or disk space."
 msgstr "La base de datos no es actualizable. Revise los permisos de archivo o el espacio en el disco."
 
 #: src/mainwindow.py:1033
-msgid "Database file not found: %s"
-msgstr "No se encontró la base de datos: %s"
+msgid "Database file not found:\n\"%s\""
+msgstr "No se encontró la base de datos:\n\"%s\""
 
 #: src/mainwindow.py:1036 src/upgrade.py:65 src/upgrade.py:105
 msgid "An undefined error has ocurred!"

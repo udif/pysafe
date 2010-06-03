@@ -166,8 +166,8 @@ msgid "The database are not updataple. Check file permissions or disk space."
 msgstr "Baza danych nie może być zaktualizowana. Sprawdź dostęp do plików oraz miejsce na dysku"
 
 #: src/mainwindow.py:1033
-msgid "Database file not found: %s"
-msgstr "Baza danych nie została odnaleziona: %s"
+msgid "Database file not found:\n\"%s\""
+msgstr "Baza danych nie została odnaleziona:\n\"%s\""
 
 #: src/mainwindow.py:1036 src/upgrade.py:65 src/upgrade.py:105
 msgid "An undefined error has ocurred!"

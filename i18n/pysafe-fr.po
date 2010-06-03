@@ -170,8 +170,8 @@ msgid "The database are not updataple. Check file permissions or disk space."
 msgstr "Le fichier des mots de passe ne peut pas être mise à jour. Vérifier les permissions et l'espace disque."
 
 #: src/mainwindow.py:1033
-msgid "Database file not found: %s"
-msgstr "Fichier des mots de passe non trouvé: %s"
+msgid "Database file not found:\n\"%s\""
+msgstr "Fichier des mots de passe non trouvé:\n\"%s\""
 
 #: src/mainwindow.py:1036 src/upgrade.py:65 src/upgrade.py:105
 msgid "An undefined error has ocurred!"
