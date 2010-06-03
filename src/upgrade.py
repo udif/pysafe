@@ -11,7 +11,8 @@ from PyQt4.QtCore import *
 
 class Upgrade:
 
-  def __init__(self, oldVersion, newVersion):
+  def __init__(self, parent, oldVersion, newVersion):
+    self.__parent = parent
     self.__oldVersion = oldVersion
     self.__newVersion = newVersion
 
@@ -19,9 +20,9 @@ class Upgrade:
   def check(self):
     ret = True
     if self.__oldVersion == "0" and os.path.exists(os.path.join(os.path.expanduser('~'), "MyDocs", "pysafe.db")):
-      ret = ToSqlite().run()
+      ret = ToSqlite(self.__parent).run()
     else:
-      ret = NewSqlite().run()
+      ret = NewSqlite(self.__parent).run()
 
     return ret
 
@@ -33,8 +34,8 @@ class ToSqlite(QWizard):
   SENHA_INVALIDA = 2
   DADOS_CORROMPIDOS = 3
 
-  def __init__(self):
-    QWizard.__init__(self, None)
+  def __init__(self, parent):
+    QWizard.__init__(self, parent)
 
     self.database_data = {}
 
@@ -293,8 +294,8 @@ class ToSqlite(QWizard):
 
 class NewSqlite(QWizard):
 
-  def __init__(self):
-    QWizard.__init__(self, None)
+  def __init__(self, parent):
+    QWizard.__init__(self, parent)
 
     self.database_data = {}
 
@@ -302,14 +303,15 @@ class NewSqlite(QWizard):
     self.setWindowTitle(_("Setup Wizard"))
 
     self.addPage(self.createWelcome())
-    self.addPage(self.createPassword())
     self.addPage(self.createFilename())
+    self.addPage(self.createNewPassword())
+    self.addPage(self.createPassword())
 
 
   def initializePage(self, id):
     QWizard.initializePage(self, id)
 
-    if id == 2:
+    if id == 1:
       fn = str(self.field("filename").toString())
       if fn is None or len(fn) == 0:
         if os.path.exists(os.path.join(os.path.expanduser('~'), "MyDocs")):
@@ -319,35 +321,65 @@ class NewSqlite(QWizard):
           self.setField("filename", os.path.join(os.path.expanduser('~'), "pysafe.sqlite"))
 
 
-  def run(self):
-    if self.exec_() == 1:
+  def nextId(self):
+    id = QWizard.nextId(self)
+    if id == 2:
       fn = str(self.field("filename").toString())
-      pwd = str(self.field("password1").toString())
+      if os.path.exists(fn) and not self.field("overwrite").toBool():
+        id = 3
+    elif id == 3:
+      id = -1
+    return id
 
-      if os.path.exists(fn):
-        if QMessageBox.question(None, " ", _("The file \"%s\" already exists. Overwrite?") % fn, QMessageBox.Yes | QMessageBox.No) != QMessageBox.Yes:
-          return None
-        # remove o arquivo
-        os.remove(fn)
 
-      db = Dados(fn)
-      db.createDB(pwd)
+  def run(self):
+    while True:
+      if self.exec_() == 1:
+        fn = str(self.field("filename").toString())
+        ovw = self.field("overwrite").toBool()
 
-      return (fn, pwd)
-    else:
-      return None
+        if os.path.exists(fn) and not ovw:
+          pwd = str(self.field("password").toString())
+          db = Dados(fn)
+          ret = db.open(pwd)
+          if ret != db.DATABASE_OK:
+            texto = _("An undefined error has ocurred!")
+            if ret == db.ARQUIVO_NAO_LOCALIZADO:
+              texto = _("Database file not found. There was an error creating the database.")
+            elif ret == db.SENHA_INVALIDA:
+              texto = _("Invalid password!")
+            elif ret == db.DADOS_CORROMPIDOS:
+              texto = _("Database corrupted or invalid password!")
+            QMessageBox.warning(None, " ", texto)
+            continue
+
+          return (fn, pwd)
+
+        else:
+          if self.field("password1") != self.field("password2"):
+            QMessageBox.warning(None, " ", _("The passwords are not equals!"))
+            continue
+
+          pwd = str(self.field("password1").toString())
+
+          if os.path.exists(fn):
+            # remove o arquivo
+            os.remove(fn)
+
+          db = Dados(fn)
+          db.createDB(pwd)
+
+          return (fn, pwd)
+      else:
+        return None
 
 
   def pageChanged(self, id):
-    if id == 2:
+    # TODO garantir que pode criar o arquivo!
+    if id == 3:
       if self.field("password1") != self.field("password2"):
         QMessageBox.warning(None, " ", _("The passwords are not equals!"))
         self.back()
-    elif id == 3:
-      print "IUHUUU"
-      # TODO garantir que pode criar o arquivo!
-      fn = str(self.field("filename").toString())
-      # verifica se é possível criar o arquivo novo
 
 
   def createWelcome(self):
@@ -363,7 +395,7 @@ class NewSqlite(QWizard):
     return page
 
 
-  def createPassword(self):
+  def createNewPassword(self):
     page = QWizardPage()
 
     label1 = QLabel(_("Type your password"), page)
@@ -392,18 +424,43 @@ class NewSqlite(QWizard):
     return page
 
 
+  def createPassword(self):
+    page = QWizardPage(self)
+
+    label = QLabel(_("Type your current password"), page)
+    label.setWordWrap(True)
+
+    password = QLineEdit(page)
+    password.setEchoMode(QLineEdit.Password)
+    page.registerField("password*", password)
+
+    layout = QVBoxLayout()
+    layout.addWidget(label)
+    layout.addWidget(password)
+
+    page.setLayout(layout)
+
+    return page
+
+
   def createFilename(self):
     page = QWizardPage()
 
     label = QLabel(_("Enter the database name and location"), page)
     label.setWordWrap(True)
 
-    button = QPushButton("")
+    button = QPushButton("", page)
     button.setIcon(util.getIcon("file-open.png"))
     button.clicked.connect(self.file_button_clicked)
 
-    filename = QLineEdit()
+    filename = QLineEdit(page)
     page.registerField("filename*", filename)
+
+    overwrite = QCheckBox(_("Overwrite"), page)
+    page.registerField("overwrite", overwrite)
+
+    label1 = QLabel(_("(if unchecked and the file exists will try to use it)"), page)
+    label1.setWordWrap(True)
 
     layout = QVBoxLayout()
     layout.addWidget(label)
@@ -411,6 +468,8 @@ class NewSqlite(QWizard):
     layout2.addWidget(filename)
     layout2.addWidget(button)
     layout.addLayout(layout2)
+    layout.addWidget(overwrite)
+    layout.addWidget(label1)
 
     page.setLayout(layout)
 
