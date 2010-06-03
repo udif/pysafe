@@ -31,7 +31,7 @@ class Configuration:
     tmp = 300
     if self.__config.has_option('Window', 'portrait_slider'):
       tmp = self.__config.get('Window', 'portrait_slider')
-      if not tmp.isdigit() or int(tmp) > 800:
+      if not tmp.isdigit():
         tmp = 300
     # salva o tamanho na configuração para garantir que não há erros
     self.__config.set('Window', 'portrait_slider', tmp)
@@ -40,7 +40,7 @@ class Configuration:
     tmp = 300
     if self.__config.has_option('Window', 'landscape_slider'):
       tmp = self.__config.get('Window', 'landscape_slider')
-      if not tmp.isdigit() or int(tmp) > 800:
+      if not tmp.isdigit():
         tmp = 300
     self.__config.set('Window', 'landscape_slider', tmp)
 
