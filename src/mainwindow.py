@@ -35,7 +35,6 @@ class MainWindow(QMainWindow):
     # define propriedades da janela
     self.setWindowTitle("pySafe")
     self.setWindowIcon(util.getIcon("pysafe_48x48.png"))
-    #self.setAttribute(Qt.WA_Maemo5ForceAutoOrientation, True)
 
     # adiciona o menu
     self.__create_menu()
@@ -186,7 +185,9 @@ class MainWindow(QMainWindow):
 
 
   def rename(self, id, newName):
-    if type(newName) is not str:
+    if type(newName) is QString:
+      newName = str(newName.toUtf8())
+    elif type(newName) is not str:
       newName = str(newName)
     self.database.rename(id, newName)
 
@@ -199,6 +200,7 @@ class MainWindow(QMainWindow):
 
 
   def screen_rotation(self, mode):
+    print mode
     if mode != "portrait":
       w1 = self.splitterVertical.widget(0)
       w2 = self.splitterVertical.widget(1)
@@ -213,8 +215,8 @@ class MainWindow(QMainWindow):
       self.mainlayout.removeWidget(self.splitterVertical)
       self.splitterVertical.setParent(None)
       self.mainlayout.addWidget(self.splitterHorizontal)
-      self.splitterHorizontal.setSizes([self.config.get(self.config.LANDSCAPE_SLIDER_SIZE), 800 - self.config.get(self.config.LANDSCAPE_SLIDER_SIZE)])
-      #self.setAttribute(Qt.WA_Maemo5ForcePortraitOrientation, True)
+      self.splitterHorizontal.setSizes([self.config.get(self.config.LANDSCAPE_SLIDER_SIZE), self.width() - self.config.get(self.config.LANDSCAPE_SLIDER_SIZE)])
+      self.setAttribute(Qt.WA_Maemo5LandscapeOrientation, True)
     else:
       w1 = self.splitterHorizontal.widget(0)
       w2 = self.splitterHorizontal.widget(1)
@@ -229,8 +231,8 @@ class MainWindow(QMainWindow):
       self.mainlayout.removeWidget(self.splitterHorizontal)
       self.splitterHorizontal.setParent(None)
       self.mainlayout.addWidget(self.splitterVertical)
-      self.splitterVertical.setSizes([self.config.get(self.config.PORTRAIT_SLIDER_SIZE), 480 - self.config.get(self.config.PORTRAIT_SLIDER_SIZE)])
-      #self.setAttribute(Qt.WA_Maemo5ForceLandscapeOrientation, True)
+      self.splitterVertical.setSizes([self.config.get(self.config.PORTRAIT_SLIDER_SIZE), self.height() - self.config.get(self.config.PORTRAIT_SLIDER_SIZE)])
+      self.setAttribute(Qt.WA_Maemo5PortraitOrientation, True)
 
     self.showDetailsForItem()
 
@@ -246,7 +248,11 @@ class MainWindow(QMainWindow):
 
   def import_from_file_clicked(self):
     from import_data import ImportWizard
-    ImportWizard(self, self.database)
+    progress = ProgressBarDialog(self, _("Importing..."))
+    ImportWizard(self, self.database, progress)
+    progress.reset()
+    progress.hide()
+    progress.close()
     self.showItens()
 
 
@@ -280,8 +286,8 @@ class MainWindow(QMainWindow):
       id = 0
       if self.selectedItem is not None:
         id = self.selectedItem.getId()
-      id = self.database.add_group(id, str(text))
-      self.addItem(str(text), id, "g", self.selectedItem)
+      id = self.database.add_group(id, str(text.toUtf8()))
+      self.addItem(str(text.toUtf8()), id, "g", self.selectedItem)
 
 
   def add_item_clicked(self):
@@ -289,13 +295,13 @@ class MainWindow(QMainWindow):
     title = _("New item")
     if len(grupos) > 0:
       title = (_("New item in group \"%s\"") % grupos)
-    (text, response) = QInputDialog.getText(None, " ", title)
+    (text, response) = QInputDialog.getText(self, " ", title)
     if response == True:
       id = 0
       if self.selectedItem is not None:
         id = self.selectedItem.getId()
-      id = self.database.add_item(id, str(text))
-      self.addItem(str(text), id, "i", self.selectedItem)
+      id = self.database.add_item(id, str(text.toUtf8()))
+      self.addItem(str(text.toUtf8()), id, "i", self.selectedItem)
 
 
   def del_group_item_clicked(self):
@@ -367,7 +373,7 @@ class MainWindow(QMainWindow):
     (text, response) = QInputDialog.getText(None, " ", title)
 
     if response == True:
-      id = self.database.add_detail(self.selectedItem.getId(), str(text))
+      id = self.database.add_detail(self.selectedItem.getId(), str(text.toUtf8()))
       if id != None:
         self.showDetailsForItem(id)
 
@@ -393,12 +399,6 @@ class MainWindow(QMainWindow):
 
 
   def about_clicked(self):
-    """ FIXME
-    if self.rotation_object.get_orientation() == "portrait":
-      self.rotation_object._orientation_changed("landscape")
-    else:
-      self.rotation_object._orientation_changed("portrait")
-    """
     text = "(2010) Jorge Aguilar (pysafe@aguilarj.com)"
     if _("translator-credits") != "translator-credits":
       text = "%s\n\n%s" % (text, _("translator-credits"))
@@ -540,7 +540,7 @@ class MainWindow(QMainWindow):
       if pass2 != pass1:
         QMessageBox.warning(self, " ", _("The passwords are not equals!"))
       else:
-        progress = ProgressBarPassword(self)
+        progress = ProgressBarDialog(self, _("Changing password..."))
         progress.show()
         ret = self.database.changePassword(str(pass1), progress)
         if ret:
@@ -558,6 +558,9 @@ class MainWindow(QMainWindow):
 
   def __menuButtonsCheck(self):
     if self.rotation_object.get_orientation() == "portrait":
+      self.change_pass_action.setVisible(False)
+      self.import_action.setVisible(False)
+
       self.add_group_button.setVisible(False)
       self.add_item_button.setVisible(False)
       self.del_item_group_button.setVisible(False)
@@ -569,6 +572,9 @@ class MainWindow(QMainWindow):
       self.delete_detail_button.setVisible(False)
       self.cancel_del_detail_button.setVisible(False)
     else:
+      self.change_pass_action.setVisible(True)
+      self.import_action.setVisible(True)
+
       self.import_action.setEnabled(True)
       self.change_pass_action.setEnabled(True)
       self.about_action.setEnabled(True)
@@ -803,10 +809,10 @@ class GroupListItem(QStandardItem):
     return self.__type
 
 
-class ProgressBarPassword(QProgressDialog):
+class ProgressBarDialog(QProgressDialog):
 
-  def __init__(self, parent):
-    QProgressDialog.__init__(self, _("Changing password..."), _("Cancel"), 0, 0, parent)
+  def __init__(self, parent, label):
+    QProgressDialog.__init__(self, label, _("Cancel"), 0, 0, parent)
     self.setWindowTitle(" ")
 
   def updateProgressBar(self, total):
@@ -931,7 +937,7 @@ class Find(QPushButton):
   def __createModel(self, model, path = 0, parent = None):
     if parent is None:
       model.clear()
-      parent = GroupListItem(_("home"), path, "g", editable = False)
+      parent = GroupListItem(" ", path, "g", editable = False)
       model.invisibleRootItem().appendRow(parent)
 
     el = self.__database.get(path)
@@ -1051,9 +1057,9 @@ class pysafe:
     # cria a janela principal
     win = MainWindow(config)
 
-    if config.get(Configuration.VERSION) != VERSION:
+    if config.get(Configuration.VERSION) == "0":
       from upgrade import Upgrade
-      u = Upgrade(config.get(Configuration.VERSION), VERSION)
+      u = Upgrade(win, config.get(Configuration.VERSION), VERSION)
       ret = u.check()
       if ret is None:
         return
@@ -1082,7 +1088,7 @@ class pysafe:
           QMessageBox.warning(win, " ", _("The database are not updataple. Check file permissions or disk space."))
           break
         elif ret == database.ARQUIVO_NAO_LOCALIZADO:
-          response = QMessageBox.warning(win, " ", _("Database file not found: %s") % config.get(Configuration.DATABASE_FILE))
+          response = QMessageBox.warning(win, " ", _("Database file not found:\n\"%s\"") % config.get(Configuration.DATABASE_FILE))
           return
         else:
           texto = _("An undefined error has ocurred!")
