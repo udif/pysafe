@@ -204,10 +204,6 @@ msgstr "El archivo \"%s\" ya existe. ¿Sobreescribir?"
 msgid "Database file not found. There was an error creating the database."
 msgstr "No se encontró el archivo de base de datos. Hubo un error al crear la base de datos."
 
-#: src/upgrade.py:75
-msgid "Importing..."
-msgstr "Importando..."
-
 #: src/upgrade.py:107
 msgid "Database file not found"
 msgstr "No se encontró el archivo de base de datos"
