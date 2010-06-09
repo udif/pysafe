@@ -134,10 +134,15 @@ class MainWindow(QMainWindow):
     self.splitterHorizontal.addWidget(listwidget)
     self.splitterHorizontal.addWidget(detailwidget)
 
-    # cria o objeto responsável pela rotação da tela
-    self.rotation_object = FremantleRotation("pySafe", cb=self.screen_rotation)
-    # o deixa desativado por enquanto! Só ativa quando exibir a janela em si
-    self.rotation_object.set_mode(FremantleRotation.NEVER)
+    # verifica se estamos no Maemo (e portanto temos rotação)
+    self.MAEMO5 =  hasattr(Qt, "WA_Maemo5PortraitOrientation")
+
+    self.orientation = "none"
+    if self.MAEMO5:
+      # cria o objeto responsável pela rotação da tela
+      self.rotation_object = FremantleRotation("pySafe", cb=self.screen_rotation)
+      # o deixa desativado por enquanto! Só ativa quando exibir a janela em si
+      self.rotation_object.set_mode(FremantleRotation.NEVER)
 
 
   """
@@ -193,14 +198,14 @@ class MainWindow(QMainWindow):
 
 
   def splitterMoved(self, pos, index):
-    if self.rotation_object.get_orientation() == "portrait":
+    if self.orientation == "portrait":
       self.config.set(self.config.PORTRAIT_SLIDER_SIZE, pos)
     else:
       self.config.set(self.config.LANDSCAPE_SLIDER_SIZE, pos)
 
 
   def screen_rotation(self, mode):
-    print mode
+    self.orientation = mode
     if mode != "portrait":
       w1 = self.splitterVertical.widget(0)
       w2 = self.splitterVertical.widget(1)
@@ -216,7 +221,8 @@ class MainWindow(QMainWindow):
       self.splitterVertical.setParent(None)
       self.mainlayout.addWidget(self.splitterHorizontal)
       self.splitterHorizontal.setSizes([self.config.get(self.config.LANDSCAPE_SLIDER_SIZE), self.width() - self.config.get(self.config.LANDSCAPE_SLIDER_SIZE)])
-      self.setAttribute(Qt.WA_Maemo5LandscapeOrientation, True)
+      if self.MAEMO5:
+        self.setAttribute(Qt.WA_Maemo5LandscapeOrientation, True)
     else:
       w1 = self.splitterHorizontal.widget(0)
       w2 = self.splitterHorizontal.widget(1)
@@ -232,14 +238,18 @@ class MainWindow(QMainWindow):
       self.splitterHorizontal.setParent(None)
       self.mainlayout.addWidget(self.splitterVertical)
       self.splitterVertical.setSizes([self.config.get(self.config.PORTRAIT_SLIDER_SIZE), self.height() - self.config.get(self.config.PORTRAIT_SLIDER_SIZE)])
-      self.setAttribute(Qt.WA_Maemo5PortraitOrientation, True)
+      if self.MAEMO5:
+        self.setAttribute(Qt.WA_Maemo5PortraitOrientation, True)
 
     self.showDetailsForItem()
 
 
   def show(self):
     # habilita a rotação
-    self.rotation_object.set_mode(FremantleRotation.AUTOMATIC)
+    if self.MAEMO5:
+      self.rotation_object.set_mode(FremantleRotation.AUTOMATIC)
+    else:
+      self.screen_rotation(self.orientation)
     # mostra os grupos
     self.showItens()
     self.__menuButtonsCheck()
@@ -441,7 +451,7 @@ class MainWindow(QMainWindow):
           
           view = MyLineEdit(QString.fromUtf8(text), widget, id, self.textview_changed, self.setLastWidgetWithFocus, pos, self.showDetailsEdit)
           view.setCursorPosition(0)
-          view.setReadOnly(self.database.isReadOnly() or self.rotation_object.get_orientation() == "portrait")
+          view.setReadOnly(self.database.isReadOnly() or self.orientation == "portrait")
           view.setLast(pos == len(items) - 1)
           if focus == id:
             widgetVisible = view
@@ -455,7 +465,7 @@ class MainWindow(QMainWindow):
 
             # FIXME não aparece o scrollbar
             view = PlainTextEdit(QString(text), widget, id, self.textview_changed, self.setLastWidgetWithFocus)
-            view.setReadOnly(self.database.isReadOnly() or self.rotation_object.get_orientation() == "portrait")
+            view.setReadOnly(self.database.isReadOnly() or self.orientation == "portrait")
             teste.addWidget(view)
 
     self.deleteDetailList.selectionModel().select(selectionModel, QItemSelectionModel.Select)
@@ -557,7 +567,7 @@ class MainWindow(QMainWindow):
 
 
   def __menuButtonsCheck(self):
-    if self.rotation_object.get_orientation() == "portrait":
+    if self.orientation == "portrait":
       self.change_pass_action.setVisible(False)
       self.import_action.setVisible(False)
 
@@ -1046,7 +1056,8 @@ class errorLog:
 
 class pysafe:
   def __init__(self):
-    sys.stderr = errorLog()
+    if not "-no-trap-error" in sys.argv:
+      sys.stderr = errorLog()
 
     app = QApplication(sys.argv)
 
