@@ -31,10 +31,14 @@ class ImportWizard(QWizard):
     self.addPage(self.createFileName())
     self.addPage(self.createFileType())
 
+    import_from_file(database, progress, "/home/aguilar/pysafe/keepassx.xml", import_from_file.KEEPASSX_XML)
+
+    """
     while self.exec_():
       if self.filetype != None and type(self.filetype) is int:
         import_from_file(database, progress, self.field("filename").toString(), self.filetype)
         break
+    """
 
 
   def pageChanged(self, id):
@@ -197,6 +201,7 @@ class handy_safe_pro_text:
     for line in lines:
       if progress.updateProgressBar(len(lines)):
         database.rollbackTransaction()
+        block = ""
         break
       #line = convert_to_str(file.readline())
       #if len(line) == 0:
@@ -290,6 +295,7 @@ class handy_safe_pro_xml:
 
 
   def read(self, database, data, path = [0]):
+    ret = True
     for i in data:
       if type(data[i]) is list:
         for j in data[i]:
@@ -298,7 +304,7 @@ class handy_safe_pro_xml:
           if i == "Folder":
             id = database.add_group(path[-1], convert_to_str(j["name"]))
             path.append(id)
-            self.read(database, j, path)
+            ret = self.read(database, j, path)
             path.pop()
           elif i == "Card":
             id = database.add_item(path[-1], convert_to_str(j["name"]))
@@ -316,10 +322,10 @@ class handy_safe_pro_xml:
         elif i == "Folder":
           id = database.add_group(path[-1], convert_to_str(data[i]["name"]))
           path.append(id)
-          self.read(database, data[i], path)
+          ret = self.read(database, data[i], path)
           path.pop()
 
-    return True
+    return ret
 
 
   def read_card(self, database, path, data):
@@ -345,8 +351,6 @@ class handy_safe_pro_xml:
     if "Note" in data:
       id = database.add_detail(path[-1], _("Note"))
       database.set_detail(id, convert_to_str(data["Note"]))
-
-    return True
 
 
 """
@@ -422,6 +426,7 @@ class keepassx_xml:
 
 
   def read(self, database, data, path = [0]):
+    ret = True
     for i in data:
       if type(data[i]) is list:
         for j in data[i]:
@@ -430,7 +435,7 @@ class keepassx_xml:
           if i == "group":
             id = database.add_group(path[-1], convert_to_str(j["title"]))
             path.append(id)
-            self.read(database, j, path)
+            ret = self.read(database, j, path)
             path.pop()
           elif i == "entry":
             id = database.add_item(path[-1], convert_to_str(j["title"]))
@@ -443,13 +448,15 @@ class keepassx_xml:
         if i == "group":
           id = database.add_group(path[-1], convert_to_str(data[i]["title"]))
           path.append(id)
-          self.read(database, data[i], path)
+          ret = self.read(database, data[i], path)
           path.pop()
         elif i == "entry":
           id = database.add_item(path[-1], convert_to_str(data[i]["title"]))
           path.append(id)
           self.read_card(database, path, data[i])
           path.pop()
+
+    return ret
 
 
   def read_card(self, database, path, data):
