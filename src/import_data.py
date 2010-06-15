@@ -31,14 +31,10 @@ class ImportWizard(QWizard):
     self.addPage(self.createFileName())
     self.addPage(self.createFileType())
 
-    import_from_file(database, progress, "/home/aguilar/pysafe/keepassx.xml", import_from_file.KEEPASSX_XML)
-
-    """
     while self.exec_():
       if self.filetype != None and type(self.filetype) is int:
         import_from_file(database, progress, self.field("filename").toString(), self.filetype)
         break
-    """
 
 
   def pageChanged(self, id):
