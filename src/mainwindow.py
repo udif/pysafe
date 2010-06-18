@@ -134,6 +134,9 @@ class MainWindow(QMainWindow):
     self.splitterHorizontal.addWidget(listwidget)
     self.splitterHorizontal.addWidget(detailwidget)
 
+    self.lockTimer = QTimer(self)
+    self.lockTimer.timeout.connect(self.lockWindow)
+
     # verifica se estamos no Maemo (e portanto temos rotação)
     self.MAEMO5 =  hasattr(Qt, "WA_Maemo5PortraitOrientation")
 
@@ -158,11 +161,63 @@ class MainWindow(QMainWindow):
     self.import_action = QAction(_("Import"), self)
     self.import_action.triggered.connect(self.import_from_file_clicked)
 
+    self.settings_action = QAction(_("Settings"), self)
+    self.settings_action.triggered.connect(self.settings_clicked)
+
     self.menubar = self.menuBar()
     self.menubar.clear()
     self.menubar.addAction(self.import_action)
     self.menubar.addAction(self.change_pass_action)
+    self.menubar.addAction(self.settings_action)
     self.menubar.addAction(self.about_action)
+
+
+  def event(self, event):
+    # bloco dentro de um try/catch porque alguns eventos ocorrem antes
+    # que o próprio lockTimer já tenha sido criado...então evitamos
+    # erros desnecessários
+    try:
+      if self.centralWidget().isVisible():
+        # reinicia o timer
+        self.__configLockTimer()
+    except AttributeError:
+      pass
+
+    return QMainWindow.event(self, event)
+
+
+  def __configLockTimer(self):
+    if self.config.get(Configuration.AUTO_LOCK_TIME) == 0:
+      self.lockTimer.stop()
+    else:
+      self.lockTimer.start(self.config.get(Configuration.AUTO_LOCK_TIME) * 1000)
+
+
+  def lockWindow(self):
+    self.lockTimer.stop()
+    self.centralWidget().hide()
+
+    while True:
+      # cria a janela para pedir a senha
+      (pass1, result) = QInputDialog.getText(self, " ", _("Type your password"), QLineEdit.Password)
+      if result == False:
+        self.close()
+        return
+
+      if len(pass1) == 0:
+        QMessageBox.warning(self, " ", _("The password can not be empty!"))
+        continue
+
+      dbtmp = Dados(self.config.get(Configuration.DATABASE_FILE))
+      ret = dbtmp.open(pass1.toUtf8())
+      dbtmp.close()
+      if ret == Dados.SENHA_INVALIDA:
+        QMessageBox.warning(self, " ", _("Invalid password!"))
+      else:
+        break
+
+    self.centralWidget().show()
+    self.__configLockTimer()
 
 
   def setLastWidgetWithFocus(self, widget):
@@ -199,14 +254,14 @@ class MainWindow(QMainWindow):
 
   def splitterMoved(self, pos, index):
     if self.orientation == "portrait":
-      self.config.set(self.config.PORTRAIT_SLIDER_SIZE, pos)
+      self.config.set(Configuration.PORTRAIT_SLIDER_SIZE, pos)
     else:
-      self.config.set(self.config.LANDSCAPE_SLIDER_SIZE, pos)
+      self.config.set(Configuration.LANDSCAPE_SLIDER_SIZE, pos)
 
 
   def screen_rotation(self, mode):
     self.orientation = mode
-    if mode != "portrait":
+    if self.config.get(Configuration.AUTO_ROTATION) == 1 or mode != "portrait":
       w1 = self.splitterVertical.widget(0)
       w2 = self.splitterVertical.widget(1)
 
@@ -220,7 +275,7 @@ class MainWindow(QMainWindow):
       self.mainlayout.removeWidget(self.splitterVertical)
       self.splitterVertical.setParent(None)
       self.mainlayout.addWidget(self.splitterHorizontal)
-      self.splitterHorizontal.setSizes([self.config.get(self.config.LANDSCAPE_SLIDER_SIZE), self.width() - self.config.get(self.config.LANDSCAPE_SLIDER_SIZE)])
+      self.splitterHorizontal.setSizes([self.config.get(Configuration.LANDSCAPE_SLIDER_SIZE), self.width() - self.config.get(Configuration.LANDSCAPE_SLIDER_SIZE)])
       if self.MAEMO5:
         self.setAttribute(Qt.WA_Maemo5LandscapeOrientation, True)
     else:
@@ -237,7 +292,7 @@ class MainWindow(QMainWindow):
       self.mainlayout.removeWidget(self.splitterHorizontal)
       self.splitterHorizontal.setParent(None)
       self.mainlayout.addWidget(self.splitterVertical)
-      self.splitterVertical.setSizes([self.config.get(self.config.PORTRAIT_SLIDER_SIZE), self.height() - self.config.get(self.config.PORTRAIT_SLIDER_SIZE)])
+      self.splitterVertical.setSizes([self.config.get(Configuration.PORTRAIT_SLIDER_SIZE), self.height() - self.config.get(Configuration.PORTRAIT_SLIDER_SIZE)])
       if self.MAEMO5:
         self.setAttribute(Qt.WA_Maemo5PortraitOrientation, True)
 
@@ -253,6 +308,7 @@ class MainWindow(QMainWindow):
     # mostra os grupos
     self.showItens()
     self.__menuButtonsCheck()
+    self.__configLockTimer()
     QMainWindow.show(self)
 
 
@@ -413,6 +469,12 @@ class MainWindow(QMainWindow):
     if _("translator-credits") != "translator-credits":
       text = "%s\n\n%s" % (text, _("translator-credits"))
     QMessageBox.about(self, "pySafe %s" % (VERSION), text)
+
+
+  def settings_clicked(self):
+    self.config.showDialog(self)
+    self.screen_rotation(self.orientation)
+    self.__configLockTimer()
 
 
   def showDetailsForItem(self, focus = None):
@@ -1061,7 +1123,7 @@ class pysafe:
 
     app = QApplication(sys.argv)
 
-    gettext.install('pysafe', sys.path[0])
+    gettext.install('pysafe', sys.path[0], 'utf-8')
 
     config = Configuration()
 

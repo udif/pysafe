@@ -5,22 +5,29 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2010-05-26 23:41+BRT\n"
-"PO-Revision-Date: 2010-05-27 08:25+CDT\n"
-"Last-Translator: Artemio Aguilar <artemio@weesolutions.com>\n"
+"POT-Creation-Date: 2010-06-17 00:25+BRT\n"
+"PO-Revision-Date: 2010-06-17 22:16-0300\n"
+"Last-Translator: Jorge Aguilar <jdaguilar@gmail.com>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: ENCODING\n"
+"Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
 
-msgid "translator-credits"
-msgstr "Artemio Aguilar <artemio@weesolutions.com>"
+#: src/config.py:120
+msgid "auto-rotate (if available)"
+msgstr ""
+
+#: src/config.py:126
+msgid "seconds to auto-lock (0 disables)"
+msgstr ""
 
 #: src/import_data.py:28
 msgid "Import Wizard"
 msgstr "Asistente de importación"
 
-#: src/import_data.py:46 src/import_data.py:142
+#: src/import_data.py:46
+#: src/import_data.py:142
 msgid "File \"%s\" does not exist or it was not possible open it."
 msgstr "El archivo \"%s\" no existe o no fue posible abrirlo."
 
@@ -28,207 +35,258 @@ msgstr "El archivo \"%s\" no existe o no fue posible abrirlo."
 msgid "This wizard will guide you through the importing process."
 msgstr "Este asistente lo guiará a travéz del proceso de importación."
 
-#: src/import_data.py:156
+#: src/import_data.py:158
 msgid "The file format parameter was not recognized."
 msgstr "El parámetro de tipo de archivo no fué reconocido."
 
-#: src/import_data.py:161
+#: src/import_data.py:164
 msgid "Handy Safe Pro (text)"
 msgstr "Handy Safe Pro (texto)"
 
-#: src/import_data.py:162
+#: src/import_data.py:165
 msgid "Handy Safe Pro (xml)"
 msgstr "Handy Safe Pro (xml)"
 
-#: src/import_data.py:163
+#: src/import_data.py:166
 msgid "KeePassX (xml)"
 msgstr "KeePassX (xml)"
 
-#: src/import_data.py:164
+#: src/import_data.py:167
 msgid "Keyring for PalmOS (xml)"
 msgstr "Keyring para PalmOS (xml)"
 
-#: src/import_data.py:253 src/import_data.py:306 src/import_data.py:339
+#: src/import_data.py:276
+#: src/import_data.py:348
+#: src/import_data.py:387
 msgid "Note"
 msgstr "Nota"
 
-#: src/mainwindow.py:147
+#: src/mainwindow.py:155
 msgid "Change password"
 msgstr "Cambiar contraseña"
 
-#: src/mainwindow.py:150
+#: src/mainwindow.py:158
 msgid "About"
 msgstr "Acerca"
 
-#: src/mainwindow.py:153
+#: src/mainwindow.py:161
 msgid "Import"
 msgstr "Importar"
 
-#: src/mainwindow.py:251 src/upgrade.py:89
-msgid "Importing..."
-msgstr "Importando..."
-
-#: src/mainwindow.py:272
-msgid "New group"
-msgstr "Nuevo grupo"
-
-#: src/mainwindow.py:274
-msgid "New group in \"%s\""
-msgstr "Nuevo grupo en \"%s\""
-
-#: src/mainwindow.py:287
-msgid "New item"
-msgstr "Nuevo elemento"
-
-#: src/mainwindow.py:289
-msgid "New item in group \"%s\""
-msgstr "Nuevo elemento en el grupo\"%s\""
-
-#: src/mainwindow.py:304
-msgid "Are you sure you want to remove the group \"%s\" and all its items?"
-msgstr "¿Está seguro que quiere eleminar el grupo \"%s\" y todos sus elementos?"
-
-#: src/mainwindow.py:307
-msgid "Are you sure you want to remove the item \"%s\" from the group \"%s\"?"
-msgstr "¿Está seguro que quiere eliminar el elemento \"%s\" del grupo \"%s\"?"
-
-#: src/mainwindow.py:309
-msgid "Are you sure you want to remove the item \"%s\"?"
-msgstr "¿Está seguro que quiere eliminar el elemento \"%s\"?"
-
-#: src/mainwindow.py:362
-msgid "New detail for item \"%s\""
-msgstr "Nuevo detalle para el elemento \"%s\""
-
-#: src/mainwindow.py:364
-msgid "New detail for item \"%s\" in group \"%s\""
-msgstr "Nuevo detalle para el elemento \"%s\" en el grupo \"%s\""
-
-#: src/mainwindow.py:524
-msgid "Type your new password"
-msgstr "Escriba su nueva contraseña"
-
-#: src/mainwindow.py:529 src/mainwindow.py:1023
-msgid "The password can not be empty!"
-msgstr "¡La contraseña no puede quedar vacía!"
-
-#: src/mainwindow.py:533
-msgid "Retype your new password"
-msgstr "Vuelva a escribir su nueva contraseña"
-
-#: src/mainwindow.py:538
-msgid "The passwords are not equals!"
-msgstr "¡Las contraseñas no coinciden!"
-
-#: src/mainwindow.py:540
-msgid "Changing password..."
-msgstr "Cambiando contraseña..."
-
-#: src/mainwindow.py:540 src/upgrade.py:75
-msgid "Cancel"
-msgstr "Cancelar"
-
-#: src/mainwindow.py:546
-msgid "Password changed!"
-msgstr "¡Contraseña cambiada!"
-
-#: src/mainwindow.py:549
-msgid "The password was not changed!"
-msgstr "¡La contraseña no se cambió!"
-
-#: src/mainwindow.py:551
-msgid "There was an error and the password was not changed!"
-msgstr "¡Hubo un error y la contraseña no se cambió!"
-
-#: src/mainwindow.py:940
-msgid "Group"
-msgstr "Grupo"
-
-#: src/mainwindow.py:942
-msgid "Item"
-msgstr "Elemento"
-
-#: src/mainwindow.py:944
-msgid "Detail name"
-msgstr "Nombre del detalle"
-
-#: src/mainwindow.py:946
-msgid "Detail text"
-msgstr "Texto del detalle"
-
-#: src/mainwindow.py:948
-msgid "Find"
-msgstr "Buscar"
-
-#: src/mainwindow.py:1043
-msgid "An error has ocurred and a log was saved in \"%s\".\n\nSend it to the developer: pysafe@aguilarj.com."
+#: src/mainwindow.py:164
+msgid "Settings"
 msgstr ""
 
-#: src/mainwindow.py:1043
-msgid "Error!"
-msgstr ""
-
-#: src/mainwindow.py:1018 src/upgrade.py:337
+#: src/mainwindow.py:202
+#: src/mainwindow.py:1149
+#: src/upgrade.py:401
 msgid "Type your password"
 msgstr "Escriba su contraseña"
 
-#: src/mainwindow.py:1030
-msgid "The database are not updataple. Check file permissions or disk space."
-msgstr "La base de datos no es actualizable. Revise los permisos de archivo o el espacio en el disco."
+#: src/mainwindow.py:208
+#: src/mainwindow.py:604
+#: src/mainwindow.py:1154
+msgid "The password can not be empty!"
+msgstr "¡La contraseña no puede quedar vacía!"
 
-#: src/mainwindow.py:1033
-msgid "Database file not found:\n\"%s\""
-msgstr "No se encontró la base de datos:\n\"%s\""
-
-#: src/mainwindow.py:1036 src/upgrade.py:65 src/upgrade.py:105
-msgid "An undefined error has ocurred!"
-msgstr "¡Ocurrió un error no identificado!"
-
-#: src/mainwindow.py:1038 src/upgrade.py:69 src/upgrade.py:109
+#: src/mainwindow.py:215
+#: src/mainwindow.py:1169
+#: src/upgrade.py:83
+#: src/upgrade.py:126
+#: src/upgrade.py:350
 msgid "Invalid password!"
 msgstr "¡Contraseña incorrecta!"
 
-#: src/mainwindow.py:1040 src/upgrade.py:71 src/upgrade.py:111
+#: src/mainwindow.py:317
+#: src/upgrade.py:89
+msgid "Importing..."
+msgstr "Importando..."
+
+#: src/mainwindow.py:346
+msgid "New group"
+msgstr "Nuevo grupo"
+
+#: src/mainwindow.py:348
+msgid "New group in \"%s\""
+msgstr "Nuevo grupo en \"%s\""
+
+#: src/mainwindow.py:361
+msgid "New item"
+msgstr "Nuevo elemento"
+
+#: src/mainwindow.py:363
+msgid "New item in group \"%s\""
+msgstr "Nuevo elemento en el grupo\"%s\""
+
+#: src/mainwindow.py:378
+msgid "Are you sure you want to remove the group \"%s\" and all its items?"
+msgstr "¿Está seguro que quiere eleminar el grupo \"%s\" y todos sus elementos?"
+
+#: src/mainwindow.py:381
+msgid "Are you sure you want to remove the item \"%s\" from the group \"%s\"?"
+msgstr "¿Está seguro que quiere eliminar el elemento \"%s\" del grupo \"%s\"?"
+
+#: src/mainwindow.py:383
+msgid "Are you sure you want to remove the item \"%s\"?"
+msgstr "¿Está seguro que quiere eliminar el elemento \"%s\"?"
+
+#: src/mainwindow.py:436
+msgid "New detail for item \"%s\""
+msgstr "Nuevo detalle para el elemento \"%s\""
+
+#: src/mainwindow.py:438
+msgid "New detail for item \"%s\" in group \"%s\""
+msgstr "Nuevo detalle para el elemento \"%s\" en el grupo \"%s\""
+
+#: src/mainwindow.py:599
+msgid "Type your new password"
+msgstr "Escriba su nueva contraseña"
+
+#: src/mainwindow.py:608
+msgid "Retype your new password"
+msgstr "Vuelva a escribir su nueva contraseña"
+
+#: src/mainwindow.py:613
+#: src/upgrade.py:360
+#: src/upgrade.py:381
+msgid "The passwords are not equals!"
+msgstr "¡Las contraseñas no coinciden!"
+
+#: src/mainwindow.py:615
+msgid "Changing password..."
+msgstr "Cambiando contraseña..."
+
+#: src/mainwindow.py:619
+msgid "Password changed!"
+msgstr "¡Contraseña cambiada!"
+
+#: src/mainwindow.py:622
+msgid "The password was not changed!"
+msgstr "¡La contraseña no se cambió!"
+
+#: src/mainwindow.py:624
+msgid "There was an error and the password was not changed!"
+msgstr "¡Hubo un error y la contraseña no se cambió!"
+
+#: src/mainwindow.py:887
+#: src/upgrade.py:89
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: src/mainwindow.py:1051
+msgid "Group"
+msgstr "Grupo"
+
+#: src/mainwindow.py:1053
+msgid "Item"
+msgstr "Elemento"
+
+#: src/mainwindow.py:1055
+msgid "Detail name"
+msgstr "Nombre del detalle"
+
+#: src/mainwindow.py:1057
+msgid "Detail text"
+msgstr "Texto del detalle"
+
+#: src/mainwindow.py:1059
+msgid "Find"
+msgstr "Buscar"
+
+#: src/mainwindow.py:1115
+msgid ""
+"An error has ocurred and a log was saved in \"%s\".\n"
+"\n"
+"Send it to the developer: pysafe@aguilarj.com."
+msgstr ""
+
+#: src/mainwindow.py:1115
+msgid "Error!"
+msgstr ""
+
+#: src/mainwindow.py:1161
+msgid "The database are not updataple. Check file permissions or disk space."
+msgstr "La base de datos no es actualizable. Revise los permisos de archivo o el espacio en el disco."
+
+#: src/mainwindow.py:1164
+msgid ""
+"Database file not found:\n"
+"\"%s\""
+msgstr ""
+"No se encontró la base de datos:\n"
+"\"%s\""
+
+#: src/mainwindow.py:1167
+#: src/upgrade.py:79
+#: src/upgrade.py:122
+#: src/upgrade.py:346
+msgid "An undefined error has ocurred!"
+msgstr "¡Ocurrió un error no identificado!"
+
+#: src/mainwindow.py:1171
+#: src/upgrade.py:85
+#: src/upgrade.py:128
+#: src/upgrade.py:352
 msgid "Database corrupted or invalid password!"
 msgstr "¡Base de datos dañada o contraseña incorrecta!"
 
-#: src/upgrade.py:42
+#: src/upgrade.py:43
 msgid "Upgrade Wizard"
 msgstr "Asistente de actualización"
 
-#: src/upgrade.py:55 src/upgrade.py:297
+#: src/upgrade.py:69
 msgid "The file \"%s\" already exists. Overwrite?"
 msgstr "El archivo \"%s\" ya existe. ¿Sobreescribir?"
 
-#: src/upgrade.py:67
+#: src/upgrade.py:81
+#: src/upgrade.py:348
 msgid "Database file not found. There was an error creating the database."
 msgstr "No se encontró el archivo de base de datos. Hubo un error al crear la base de datos."
 
-#: src/upgrade.py:107
+#: src/upgrade.py:124
 msgid "Database file not found"
 msgstr "No se encontró el archivo de base de datos"
 
-#: src/upgrade.py:123
-msgid "This wizard will guide you through the upgrading process.\n\nThe database will be converted to the new format."
-msgstr "Este asistente lo guiará a travéz del proceso de actualización.\n\nLa base de datos será convertida al nuevo formato."
+#: src/upgrade.py:140
+msgid ""
+"This wizard will guide you through the upgrading process.\n"
+"\n"
+"The database will be converted to the new format."
+msgstr ""
+"Este asistente lo guiará a travéz del proceso de actualización.\n"
+"\n"
+"La base de datos será convertida al nuevo formato."
 
-#: src/upgrade.py:136
+#: src/upgrade.py:153
+#: src/upgrade.py:430
 msgid "Type your current password"
 msgstr "Escriba su contraseña actual"
 
-#: src/upgrade.py:155 src/upgrade.py:366
+#: src/upgrade.py:172
+#: src/upgrade.py:449
 msgid "Enter the database name and location"
 msgstr "Escriba el nombre de la base de datos y la ruta"
 
-#: src/upgrade.py:284
+#: src/upgrade.py:303
 msgid "Setup Wizard"
 msgstr "Asistente de instalación"
 
-#: src/upgrade.py:324
+#: src/upgrade.py:388
 msgid "This wizard will guide you through the setup process."
 msgstr "Este asistente lo guiará a travéz del proceso de instalación."
 
-#: src/upgrade.py:340
+#: src/upgrade.py:404
 msgid "Retype your password"
 msgstr "Vuelva a escribir su contraseña"
+
+#: src/upgrade.py:459
+msgid "Overwrite"
+msgstr ""
+
+#: src/upgrade.py:462
+msgid "(if unchecked and the file exists will try to use it)"
+msgstr ""
+
+#~ msgid "translator-credits"
+#~ msgstr "Artemio Aguilar <artemio@weesolutions.com>"
 
