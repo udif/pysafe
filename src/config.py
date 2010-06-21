@@ -69,6 +69,8 @@ class Configuration:
       tmp = self.__config.get('General', 'lock_time')
       if not tmp.isdigit():
         tmp = 0
+      if int(tmp) < 30 and tmp != 0:
+        tmp = 30
     self.__config.set('General', 'lock_time', tmp)
 
     # verifica a versão
@@ -149,6 +151,8 @@ class Configuration:
 
       tmp = str(lock.text().toUtf8())
       if tmp.isdigit():
+        if int(tmp) < 30 and tmp != 0:
+          tmp = 30
         self.set(self.AUTO_LOCK_TIME, tmp)
 
     window.close()

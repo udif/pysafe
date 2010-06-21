@@ -261,7 +261,7 @@ class MainWindow(QMainWindow):
 
   def screen_rotation(self, mode):
     self.orientation = mode
-    if self.config.get(Configuration.AUTO_ROTATION) == 1 or mode != "portrait":
+    if self.config.get(Configuration.AUTO_ROTATION) != 1 or mode != "portrait":
       w1 = self.splitterVertical.widget(0)
       w2 = self.splitterVertical.widget(1)
 
@@ -302,7 +302,11 @@ class MainWindow(QMainWindow):
   def show(self):
     # habilita a rotação
     if self.MAEMO5:
-      self.rotation_object.set_mode(FremantleRotation.AUTOMATIC)
+      if self.config.get(Configuration.AUTO_ROTATION) != 1:
+        self.orientation = "none"
+        self.rotation_object.set_mode(FremantleRotation.NEVER)
+      else:
+        self.rotation_object.set_mode(FremantleRotation.AUTOMATIC)
     else:
       self.screen_rotation(self.orientation)
     # mostra os grupos
@@ -473,6 +477,13 @@ class MainWindow(QMainWindow):
 
   def settings_clicked(self):
     self.config.showDialog(self)
+    if self.MAEMO5:
+      if self.config.get(Configuration.AUTO_ROTATION) != 1:
+        self.orientation = "none"
+        self.rotation_object.set_mode(FremantleRotation.NEVER)
+      else:
+        self.rotation_object.set_mode(FremantleRotation.AUTOMATIC)
+
     self.screen_rotation(self.orientation)
     self.__configLockTimer()
 
@@ -632,6 +643,7 @@ class MainWindow(QMainWindow):
     if self.orientation == "portrait":
       self.change_pass_action.setVisible(False)
       self.import_action.setVisible(False)
+      self.settings_action.setVisible(False)
 
       self.add_group_button.setVisible(False)
       self.add_item_button.setVisible(False)
@@ -646,6 +658,7 @@ class MainWindow(QMainWindow):
     else:
       self.change_pass_action.setVisible(True)
       self.import_action.setVisible(True)
+      self.settings_action.setVisible(True)
 
       self.import_action.setEnabled(True)
       self.change_pass_action.setEnabled(True)

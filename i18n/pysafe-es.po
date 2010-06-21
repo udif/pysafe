@@ -6,24 +6,24 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "POT-Creation-Date: 2010-06-17 00:25+BRT\n"
-"PO-Revision-Date: 2010-06-17 22:16-0300\n"
-"Last-Translator: Artemio Aguilar <artemio@weesolutions.com>\n"
+"PO-Revision-Date: 2010-06-18 13:56-0300\n"
+"Last-Translator: Jorge Aguilar <jdaguilar@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
 
-msgid "translator-credits" 
-msgstr "Artemio Aguilar <artemio@weesolutions.com>" 
+msgid "translator-credits"
+msgstr "Artemio Aguilar <artemio@weesolutions.com>"
 
 #: src/config.py:120
 msgid "auto-rotate (if available)"
-msgstr ""
+msgstr "Activar rotación (si disponible)"
 
 #: src/config.py:126
 msgid "seconds to auto-lock (0 disables)"
-msgstr ""
+msgstr "segundos para autobloqueo (0 deshabilita)"
 
 #: src/import_data.py:28
 msgid "Import Wizard"
@@ -78,7 +78,7 @@ msgstr "Importar"
 
 #: src/mainwindow.py:164
 msgid "Settings"
-msgstr ""
+msgstr "Configuración"
 
 #: src/mainwindow.py:202
 #: src/mainwindow.py:1149
@@ -202,10 +202,13 @@ msgid ""
 "\n"
 "Send it to the developer: pysafe@aguilarj.com."
 msgstr ""
+"Ocurrió un error y el registro se ha guardado en \"%s\".\n"
+"\n"
+"Envíelo al desarrollador: pysafe@aguilarj.com."
 
 #: src/mainwindow.py:1115
 msgid "Error!"
-msgstr ""
+msgstr "¡Error!"
 
 #: src/mainwindow.py:1161
 msgid "The database are not updataple. Check file permissions or disk space."
@@ -284,12 +287,9 @@ msgstr "Vuelva a escribir su contraseña"
 
 #: src/upgrade.py:459
 msgid "Overwrite"
-msgstr ""
+msgstr "Sobreescribir"
 
 #: src/upgrade.py:462
 msgid "(if unchecked and the file exists will try to use it)"
-msgstr ""
-
-#~ msgid "translator-credits"
-#~ msgstr "Artemio Aguilar <artemio@weesolutions.com>"
+msgstr "(si no esta seleccionado y el archivo existe se intentará usarlo)"
 

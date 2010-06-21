@@ -4,11 +4,11 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: pySafe 0.8\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "POT-Creation-Date: 2010-06-17 00:25+BRT\n"
-"PO-Revision-Date: 2010-06-17 22:18-0300\n"
-"Last-Translator: Ithier de Lestrange <idl@gesco.fr>\n" 
-"Language-Team: Ithier <pysafe@ithier.com>\n"
+"PO-Revision-Date: 2010-06-18 HO:MI+ZONE\n"
+"Last-Translator: Samuele Bianchi <pizzulicchio@tiscalinet.it>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -16,36 +16,36 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 msgid "translator-credits"
-msgstr "Ithier de Lestrange <pysafe@ithier.com>" 
+msgstr "Samuele Bianchi <pizzulicchio@tiscalinet.it>" 
 
 #: src/config.py:120
 msgid "auto-rotate (if available)"
-msgstr "Rotation automatique (si disponible)"
+msgstr "ruotazione schermo automatica (se possibile)"
 
 #: src/config.py:126
 msgid "seconds to auto-lock (0 disables)"
-msgstr "secondes avant verrouillage automatique (0 pour désactiver)"
+msgstr "secondi  prima dell'auto-lock (0 per disabilitare)"
 
 #: src/import_data.py:28
 msgid "Import Wizard"
-msgstr "Assistant d'import"
+msgstr "Procedura di importazione"
 
 #: src/import_data.py:46
 #: src/import_data.py:142
 msgid "File \"%s\" does not exist or it was not possible open it."
-msgstr "Le fichier \"%s\" n'existe pas ou ne peut pas être ouvert."
+msgstr "File \"%s\" inesistente o non è possibile aprirlo."
 
 #: src/import_data.py:53
 msgid "This wizard will guide you through the importing process."
-msgstr "Cet assistant vous guidera dans le processus d'import."
+msgstr "Questa procedura guidata ti assisterà nel processo di importazione."
 
 #: src/import_data.py:158
 msgid "The file format parameter was not recognized."
-msgstr "Le format du fichier est inconnu."
+msgstr "Il formato del file non è stato riconosciuto."
 
 #: src/import_data.py:164
 msgid "Handy Safe Pro (text)"
-msgstr "Handy Safe Pro (texte)"
+msgstr "Handy Safe Pro (text)"
 
 #: src/import_data.py:165
 msgid "Handy Safe Pro (xml)"
@@ -57,7 +57,7 @@ msgstr "KeePassX (xml)"
 
 #: src/import_data.py:167
 msgid "Keyring for PalmOS (xml)"
-msgstr "Keyring pour PalmOS (xml)"
+msgstr "Keyring per PalmOS (xml)"
 
 #: src/import_data.py:276
 #: src/import_data.py:348
@@ -67,31 +67,31 @@ msgstr "Note"
 
 #: src/mainwindow.py:155
 msgid "Change password"
-msgstr "Modifier le mot de passe"
+msgstr "Cambia password"
 
 #: src/mainwindow.py:158
 msgid "About"
-msgstr "A propos"
+msgstr "Riconoscimenti"
 
 #: src/mainwindow.py:161
 msgid "Import"
-msgstr "Importer"
+msgstr "Importa"
 
 #: src/mainwindow.py:164
 msgid "Settings"
-msgstr "Paramètres"
+msgstr "Settings"
 
 #: src/mainwindow.py:202
 #: src/mainwindow.py:1149
 #: src/upgrade.py:401
 msgid "Type your password"
-msgstr "Saisissez votre mot de passe"
+msgstr "Scrivi la tua password"
 
 #: src/mainwindow.py:208
 #: src/mainwindow.py:604
 #: src/mainwindow.py:1154
 msgid "The password can not be empty!"
-msgstr "Le mot de passe ne peut pas être vide"
+msgstr "Il campo password non può essere vuoto!"
 
 #: src/mainwindow.py:215
 #: src/mainwindow.py:1169
@@ -99,103 +99,103 @@ msgstr "Le mot de passe ne peut pas être vide"
 #: src/upgrade.py:126
 #: src/upgrade.py:350
 msgid "Invalid password!"
-msgstr "Mot de passe erroné !"
+msgstr "Password non valida!"
 
 #: src/mainwindow.py:317
 #: src/upgrade.py:89
 msgid "Importing..."
-msgstr "Import..."
+msgstr "Importazione in corso..."
 
 #: src/mainwindow.py:346
 msgid "New group"
-msgstr "Nouveau groupe"
+msgstr "Nuovo gruppo"
 
 #: src/mainwindow.py:348
 msgid "New group in \"%s\""
-msgstr "Nouveau groupe dans \"%s\""
+msgstr "Nuovo gruppo \"%s\""
 
 #: src/mainwindow.py:361
 msgid "New item"
-msgstr "Nouvelle fiche"
+msgstr "Nuovo oggetto"
 
 #: src/mainwindow.py:363
 msgid "New item in group \"%s\""
-msgstr "Nouvelle fiche dans le groupe \"%s\""
+msgstr "Nuovo oggetto nel gruppo \"%s\""
 
 #: src/mainwindow.py:378
 msgid "Are you sure you want to remove the group \"%s\" and all its items?"
-msgstr "Voulez-vous supprimer le groupe \"%s\" et toutes ses fiches ?"
+msgstr "Sei sicuro di voler rimuovere il gruppo \"%s\" e tutti i suoi contenuti?"
 
 #: src/mainwindow.py:381
 msgid "Are you sure you want to remove the item \"%s\" from the group \"%s\"?"
-msgstr "Voulez-vous supprimer la fiche \"%s\" du groupe \"%s\" ?"
+msgstr "Sei sicuro di voler rimuovere l'oggetto \"%s\" dal gruppo \"%s\"?"
 
 #: src/mainwindow.py:383
 msgid "Are you sure you want to remove the item \"%s\"?"
-msgstr "Voulez-vous supprimer la fiche \"%s\" ?"
+msgstr "Sei sicuro di voler rimuovere l'oggetto \"%s\"?"
 
 #: src/mainwindow.py:436
 msgid "New detail for item \"%s\""
-msgstr "Nouveau champ de la fiche \"%s\""
+msgstr "Nuovi dettagli per l'oggetto \"%s\""
 
 #: src/mainwindow.py:438
 msgid "New detail for item \"%s\" in group \"%s\""
-msgstr "Nouveau champ de la fiche \"%s\" du groupe \"%s\""
+msgstr "Nuovi dettagli per l'oggetto \"%s\" nel gruppo \"%s\""
 
 #: src/mainwindow.py:599
 msgid "Type your new password"
-msgstr "Saisissez votre nouveau mot de passe"
+msgstr "Scrivi la tua password"
 
 #: src/mainwindow.py:608
 msgid "Retype your new password"
-msgstr "Re-saisissez votre mot de passe"
+msgstr "Scrivi di nuovo la tua password"
 
 #: src/mainwindow.py:613
 #: src/upgrade.py:360
 #: src/upgrade.py:381
 msgid "The passwords are not equals!"
-msgstr "Les mots de passes ne sont pas identiques"
+msgstr "Le due password non coincidono!"
 
 #: src/mainwindow.py:615
 msgid "Changing password..."
-msgstr "Modifier le mot de passe..."
+msgstr "Sto cambiando la password..."
 
 #: src/mainwindow.py:619
 msgid "Password changed!"
-msgstr "Le mot de passe a été changé !"
+msgstr "Password cambiata!"
 
 #: src/mainwindow.py:622
 msgid "The password was not changed!"
-msgstr "Le mot de passe n'a pas été changé !"
+msgstr "La Password non è stata cambiata!"
 
 #: src/mainwindow.py:624
 msgid "There was an error and the password was not changed!"
-msgstr "Erreur, le mot de pas n'a pas pu être changé !"
+msgstr "C'è stato un errore e la password non è stata cambiata!"
 
 #: src/mainwindow.py:887
 #: src/upgrade.py:89
 msgid "Cancel"
-msgstr "Annuler"
+msgstr "Annulla"
 
 #: src/mainwindow.py:1051
 msgid "Group"
-msgstr "Groupe"
+msgstr "Gruppo"
 
 #: src/mainwindow.py:1053
 msgid "Item"
-msgstr "Fiche"
+msgstr "Oggetto"
 
 #: src/mainwindow.py:1055
 msgid "Detail name"
-msgstr "Nom du champ"
+msgstr "Nome dettaglio"
 
 #: src/mainwindow.py:1057
 msgid "Detail text"
-msgstr "Texte du champ"
+msgstr "Testo del dettaglio"
 
 #: src/mainwindow.py:1059
 msgid "Find"
-msgstr "Chercher"
+msgstr "Trova"
 
 #: src/mainwindow.py:1115
 msgid ""
@@ -203,24 +203,24 @@ msgid ""
 "\n"
 "Send it to the developer: pysafe@aguilarj.com."
 msgstr ""
-"Une erreur s'est produite et un journal a été enregistré dans \"%s\".\n"
+"Si è verificato un errore. Un file di log è stato salvato in \"%s\".\n"
 "\n"
-"Envoyez-le au développeur : pysafe@aguilarj.com."
+"Invialo allo sviluppatore : pysafe@aguilarj.com."
 
 #: src/mainwindow.py:1115
 msgid "Error!"
-msgstr "Erreur !"
+msgstr "Errore!"
 
 #: src/mainwindow.py:1161
 msgid "The database are not updataple. Check file permissions or disk space."
-msgstr "Le fichier des mots de passe ne peut pas être mise à jour. Vérifier les permissions et l'espace disque."
+msgstr "Il database non è aggiornabile. Controlla i permessi sul file o lo spazio disco."
 
 #: src/mainwindow.py:1164
 msgid ""
 "Database file not found:\n"
 "\"%s\""
 msgstr ""
-"Fichier des mots de passe non trouvé:\n"
+"Il file del database non è stato trovato:\n"
 "\"%s\""
 
 #: src/mainwindow.py:1167
@@ -228,31 +228,31 @@ msgstr ""
 #: src/upgrade.py:122
 #: src/upgrade.py:346
 msgid "An undefined error has ocurred!"
-msgstr "Une erreur inattendue s'est produite !"
+msgstr "Si è presentato un errore inaspettato!"
 
 #: src/mainwindow.py:1171
 #: src/upgrade.py:85
 #: src/upgrade.py:128
 #: src/upgrade.py:352
 msgid "Database corrupted or invalid password!"
-msgstr "Le fichier des mots de passe est corrompu ou le mot de passe est erroné !"
+msgstr "Il database è corrotto o la password non è valida!"
 
 #: src/upgrade.py:43
 msgid "Upgrade Wizard"
-msgstr "Assistant de mise à jour"
+msgstr "Procedura guidata per l'aggiornamento"
 
 #: src/upgrade.py:69
 msgid "The file \"%s\" already exists. Overwrite?"
-msgstr "Le fichier \"%s\" existe déjà. L'écraser ?"
+msgstr "Il file \"%s\" è già presente. Sovrascriverlo?"
 
 #: src/upgrade.py:81
 #: src/upgrade.py:348
 msgid "Database file not found. There was an error creating the database."
-msgstr "Le fichier des mots de passe n'existe pas. Il y a eu une erreur lors de sa création."
+msgstr "Database file non trovato. Si è presentato un errore nella creazione del database."
 
 #: src/upgrade.py:124
 msgid "Database file not found"
-msgstr "Fichier des mots de passe non trouvé"
+msgstr "Database file non trovato"
 
 #: src/upgrade.py:140
 msgid ""
@@ -260,36 +260,37 @@ msgid ""
 "\n"
 "The database will be converted to the new format."
 msgstr ""
-"Cet assistant vous guidera dans le processus de mise à jour.\n"
+"Questa procedura guidata ti aiuterà nell'aggiornamento.\n"
 "\n"
-"Le fichier des mots de passe va être converti dans le nouveau format."
+"Il database verrà convertito nel nuovo formato."
 
 #: src/upgrade.py:153
 #: src/upgrade.py:430
 msgid "Type your current password"
-msgstr "Saisissez votre mot de passe actuel"
+msgstr "Scrivi la tua attuale password"
 
 #: src/upgrade.py:172
 #: src/upgrade.py:449
 msgid "Enter the database name and location"
-msgstr "Saisissez le nom et l'emplacement du fichier des mots de passe"
+msgstr "Inserisci il nome del database ed il percorso in cui si trova"
 
 #: src/upgrade.py:303
 msgid "Setup Wizard"
-msgstr "Assistant d'installation"
+msgstr "Procedura di Setup"
 
 #: src/upgrade.py:388
 msgid "This wizard will guide you through the setup process."
-msgstr "Cet assistant vous guidera dans le processus d'installation."
+msgstr "Questa procedura guidata ti assisterà nella fase di setup."
 
 #: src/upgrade.py:404
 msgid "Retype your password"
-msgstr "Re-saisissez votre mot de passe"
+msgstr "Riscrivi la tua password"
 
 #: src/upgrade.py:459
 msgid "Overwrite"
-msgstr "Écraser"
+msgstr "Sovrascrivi"
 
 #: src/upgrade.py:462
 msgid "(if unchecked and the file exists will try to use it)"
-msgstr "(si non sélectionné et le fichier existe, on essaiera de l'utiliser)"
+msgstr "(se non controllato e il file esiste tenterà di utilizzarlo)"
+
