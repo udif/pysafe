@@ -290,7 +290,7 @@ class Dados:
     # busca o primeiro ID pai que não seja um item
     parent = id
     while parent > 0:
-      tmp = self.getCurrent(id)
+      tmp = self.getCurrent(parent)
       if tmp is None:
         parent = 0
       else:
