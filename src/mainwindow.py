@@ -730,7 +730,7 @@ class MyLineEdit(QLineEdit):
     try:
       # evitar o uso dicionário interno do aparelho (e impedir
       # que as palavras sejam inseridas nele)
-      self.setInputMethodHints(Qt.ImhNoPredictiveText)
+      self.setInputMethodHints(Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase)
     except:
       pass
     self.textChanged.connect(self.text_changed)
@@ -772,7 +772,7 @@ class PlainTextEdit(QPlainTextEdit):
   def __init__(self, text = None, parent = None, id = None, callback = None, focus = None):
     QPlainTextEdit.__init__(self, text, parent)
     try:
-      self.setInputMethodHints(Qt.ImhNoPredictiveText)
+      self.setInputMethodHints(Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase)
     except:
       pass
     self.textChanged.connect(self.text_changed)
