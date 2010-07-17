@@ -494,7 +494,7 @@ class MainWindow(QMainWindow):
 
     widget = QWidget()
     teste = QVBoxLayout(widget)
-    
+
     widgetVisible = None
 
     selectionModel = QItemSelection()
@@ -521,7 +521,7 @@ class MainWindow(QMainWindow):
         elif self.detailView == self.DETAIL_ALL_VIEW:
           label = QLabel(QString.fromUtf8(labelText), widget)
           teste.addWidget(label)
-          
+
           view = MyLineEdit(QString.fromUtf8(text), widget, id, self.textview_changed, self.setLastWidgetWithFocus, pos, self.showDetailsEdit)
           view.setCursorPosition(0)
           view.setReadOnly(self.database.isReadOnly() or self.orientation == "portrait")
@@ -537,7 +537,7 @@ class MainWindow(QMainWindow):
             teste.addWidget(label)
 
             # FIXME não aparece o scrollbar
-            view = PlainTextEdit(QString(text), widget, id, self.textview_changed, self.setLastWidgetWithFocus)
+            view = PlainTextEdit(QString.fromUtf8(text), widget, id, self.textview_changed, self.setLastWidgetWithFocus)
             view.setReadOnly(self.database.isReadOnly() or self.orientation == "portrait")
             teste.addWidget(view)
 
@@ -877,7 +877,7 @@ class GroupListItem(QStandardItem):
       self.__text = self.text()
     else:
       self.setText(self.__text)
-    
+
   def hasId(self):
     return self.__id > 0;
 
@@ -928,9 +928,9 @@ class Find(QPushButton):
     self.__database = None
     self.__state = self.__ENTER_FIND
     self.__findInfo = {self.__FIND_ATUAL: None,
-                       self.__FIND_TEXT: "", 
-                       self.__FIND_GROUP: Qt.Checked, 
-                       self.__FIND_ITEM: Qt.Checked, 
+                       self.__FIND_TEXT: "",
+                       self.__FIND_GROUP: Qt.Checked,
+                       self.__FIND_ITEM: Qt.Checked,
                        self.__FIND_DETAIL_LABEL: Qt.Unchecked,
                        self.__FIND_DETAIL_TEXT: Qt.Checked}
 
@@ -1028,7 +1028,7 @@ class Find(QPushButton):
     el = self.__database.get(path)
     for i in el:
       (id, tipo, pos, label, text) = i
-      item = GroupListItem(QString(label), id, tipo, not self.__database.isReadOnly())
+      item = GroupListItem(QString.fromUtf8(label), id, tipo, not self.__database.isReadOnly())
       parent.appendRow(item)
       if tipo == "g":
         self.__createModel(model, id, item)
@@ -1037,10 +1037,10 @@ class Find(QPushButton):
         for i in details:
           (id, tipo, pos, labelText, text) = i
           if self.__findInfo[self.__FIND_DETAIL_LABEL] == Qt.Checked:
-            detail = GroupListItem(QString(labelText), id, tipo, not self.__database.isReadOnly())
+            detail = GroupListItem(QString.fromUtf8(labelText), id, tipo, not self.__database.isReadOnly())
             item.appendRow(detail)
           if self.__findInfo[self.__FIND_DETAIL_TEXT] == Qt.Checked:
-            detail = GroupListItem(QString(text), id, tipo, not self.__database.isReadOnly())
+            detail = GroupListItem(QString.fromUtf8(text), id, tipo, not self.__database.isReadOnly())
             item.appendRow(detail)
 
     # vamos ordenar a lista, mas somente se estivermos na raiz
@@ -1103,9 +1103,9 @@ class Find(QPushButton):
     response = dialog.exec_()
 
     if response == QDialog.Accepted:
-      self.__findInfo = {self.__FIND_TEXT: self.text.text(), 
-                         self.__FIND_GROUP: self.group.checkState(), 
-                         self.__FIND_ITEM: self.item.checkState(), 
+      self.__findInfo = {self.__FIND_TEXT: self.text.text(),
+                         self.__FIND_GROUP: self.group.checkState(),
+                         self.__FIND_ITEM: self.item.checkState(),
                          self.__FIND_DETAIL_LABEL: self.detailName.checkState(),
                          self.__FIND_DETAIL_TEXT: self.detailText.checkState()}
 
