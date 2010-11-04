@@ -135,7 +135,7 @@ class MainWindow(QMainWindow):
     self.splitterHorizontal.addWidget(detailwidget)
 
     self.lockTimer = QTimer(self)
-    self.lockTimer.timeout.connect(self.lockWindow)
+    # FIXME self.lockTimer.timeout.connect(self.lockWindow)
 
     # verifica se estamos no Maemo (e portanto temos rotação)
     self.MAEMO5 =  hasattr(Qt, "WA_Maemo5PortraitOrientation")

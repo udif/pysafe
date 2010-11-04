@@ -129,6 +129,7 @@ class Configuration:
     lock = QLineEdit(window)
     lock.setInputMask("0000")
     lock.setText(str(self.get(self.AUTO_LOCK_TIME)))
+    lock.setEnabled(False)
 
     button = QDialogButtonBox(QDialogButtonBox.Save, Qt.Horizontal, window)
     window.connect(button, SIGNAL('accepted()'), window, SLOT('accept()'))
@@ -141,6 +142,7 @@ class Configuration:
     layout1.addWidget(lock_label)
     layout1.addStretch(1)
     layout.addLayout(layout1)
+    layout.addWidget(QLabel("(auto-lock disabled due to problems with the menu)"))
     layout.addWidget(button)
 
     if window.exec_() == QDialog.Accepted:
@@ -151,7 +153,8 @@ class Configuration:
 
       tmp = str(lock.text().toUtf8())
       if tmp.isdigit():
-        if int(tmp) < 30 and tmp != 0:
+        tmp = int(tmp)
+        if tmp < 30 and tmp != 0:
           tmp = 30
         self.set(self.AUTO_LOCK_TIME, tmp)
 
