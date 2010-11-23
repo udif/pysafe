@@ -36,7 +36,7 @@ class FremantleRotation(object):
     _MCE_REQUEST_PATH = '/com/nokia/mce/request'
     _MCE_REQUEST_IF = 'com.nokia.mce.request'
 
-    def __init__(self, app_name, version='1.0', mode=0, cb = None):
+    def __init__(self, system_bus, app_name, version='1.0', mode=0, cb = None):
         """Create a new rotation manager
 
         app_name    ... The name of your application (for osso.Context)
@@ -52,8 +52,8 @@ class FremantleRotation(object):
         if OSSO:
           self._osso_context = osso.Context(app_id, version, False)
 
-        loop = DBusQtMainLoop(set_as_default=True)
-        system_bus = dbus.SystemBus(mainloop=loop)
+        #loop = DBusQtMainLoop(set_as_default=True)
+        #system_bus = dbus.SystemBus(mainloop=loop)
         system_bus.add_signal_receiver(self._on_orientation_signal, \
                 signal_name='sig_device_orientation_ind', \
                 dbus_interface='com.nokia.mce.signal', \
