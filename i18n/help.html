@@ -1,0 +1,72 @@
+<html>
+<head>
+<style>
+</style>
+</head>
+<body>
+<h1>Help for pySafe</h1>
+<p>
+<a href="#concepts">Concepts</a><br>
+<a href="#buttons">Buttons</a><br>
+<a href="#editing">Editing</a><br>
+<a href="#searching">Searching</a><br>
+</p>
+
+<hr />
+<a name="concepts"><h2>Concepts</h2></a>
+<p>
+There are 3 elements in the program:
+<ul><li>groups</li>
+<li>items</li>
+<li>details</li></ul>
+The hierarchy is simple: a detail is a label with a text. The details must be inside an item. And the item must be inside a group.
+You can have as many groups as you like, and can put a group inside another group.<br><br>
+The groups are only for categorization. You don't need to use them (there is always a <i>root group</i>).<br><br>
+Groups and items are always showed in the left panel (or top panel, if in portrait mode), and the details always in right panel (or bottom).<br><br>
+You can resize the panels sliding the separator bar. The position of the bar is saved in a configuration file.
+</p>
+<a class="top" href="#top">top</a>
+
+<hr />
+<a name="buttons"><h2>Buttons</h2></a>
+<p>
+The buttons are divided between the two panels. The 3 left buttons make operations in the groups and items:
+<ul><li><img width="32" height="32" src="icons/add-group.png">: add a group inside the selected group</li>
+<li><img width="32" height="32" src="icons/add-item.png">: add an item inside the selected group</li>
+<li><img width="32" height="32" src="icons/delete.png">: remove the selected item (and all its details) or the selected group (and all its items e details)</li></ul>
+</p><p>
+The buttons of the right panel have these functions:
+<ul><li><img width="32" height="32" src="icons/find.png">: make a <a href="#searching">search</a></li>
+<li><img width="32" height="32" src="icons/go-up.png">: move the selected detail up</li>
+<li><img width="32" height="32" src="icons/go-down.png">: move the selected detail down</li>
+<li><img width="32" height="32" src="icons/add-detail.png">: add a detail</li>
+<li><img width="32" height="32" src="icons/edit.png">: show the detail labels in a list to easily remove or reorder it</li>
+<li><img width="32" height="32" src="icons/delete.png">: (only visible after pressed the edit button) remove the select details</li>
+<li><img width="32" height="32" src="icons/back.png">: (only visible after pressed the edit button) close de detail labels</li></ul>
+</p>
+<a class="top" href="#top">top</a>
+
+<hr />
+<a name="editing"><h2>Editing</h2></a>
+<p>
+To edit the details you can enter the data in the field, or if the data are too large (or multi-line), double tap the text field and a
+larger field will be shown. To close press the back button (<img width="32" height="32" src="icons/back.png">).<br><br>
+You can copy, cut and paste details, items and groups into another items and groups, and can copy the detail text into the clipboard to
+paste in another application. This is done via context menus. To show the menu make a long press in the detail, item or group.<br><br>
+To rename a group or item double tap it. To rename a detail show the detail labels in a list <img width="32" height="32" src="icons/edit.png">
+and double tap the label.
+</p>
+<a class="top" href="#top">top</a>
+
+<hr />
+<a name="searching"><h2>Searching</h2></a>
+<p>
+To search press the corresponding button (<img width="32" height="32" src="icons/find.png">).<br><br>
+To continue searching press the search button with a different icon (<img width="32" height="32" src="icons/find-next.png">).
+The search will be circular.<br><br>
+To make a new search long press the button.
+</p>
+<a class="top" href="#top">top</a>
+
+</body>
+</html>

@@ -1,0 +1,357 @@
+# pySafe German locale v1.0 (pySafe 0.9.11), 1 August 2010
+# Hubert Wachter <Hubert.Wachter@gmx.li>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pySafe\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-11-23 18:38-0200\n"
+"PO-Revision-Date: 2010-11-23 18:54-0300\n"
+"Last-Translator: Jorge Aguilar <n900@aguilarj.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+
+#: src/import_data.py:28
+msgid "Import Wizard"
+msgstr "Import Assistent"
+
+#: src/import_data.py:46
+#: src/import_data.py:142
+#, python-format
+msgid "File \"%s\" does not exist or it was not possible open it."
+msgstr "Datei \"%s\" existiert nicht oder konnte nicht geöffnet werden."
+
+#: src/import_data.py:53
+msgid "This wizard will guide you through the importing process."
+msgstr "Dieser Assistent führt Sie durch den Import Vorgang."
+
+#: src/import_data.py:158
+msgid "The file format parameter was not recognized."
+msgstr "Der Dateiformatparameter wurde nicht erkannt."
+
+#: src/import_data.py:164
+msgid "Handy Safe Pro (text)"
+msgstr "Handy Safe Pro (Text)"
+
+#: src/import_data.py:165
+msgid "Handy Safe Pro (xml)"
+msgstr "Handy Safe Pro (xml)"
+
+#: src/import_data.py:166
+msgid "KeePassX (xml)"
+msgstr "KeePassX (xml)"
+
+#: src/import_data.py:167
+msgid "Keyring for PalmOS (xml)"
+msgstr "Keyring für PalmOS (xml)"
+
+#: src/import_data.py:276
+#: src/import_data.py:348
+#: src/import_data.py:387
+msgid "Note"
+msgstr "Notiz"
+
+#: src/mainwindow.py:175
+msgid "Change password"
+msgstr "Passwort ändern"
+
+#: src/mainwindow.py:178
+msgid "About"
+msgstr "Info"
+
+#: src/mainwindow.py:181
+msgid "Help"
+msgstr ""
+
+#: src/mainwindow.py:184
+msgid "Import"
+msgstr "Import"
+
+#: src/mainwindow.py:187
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: src/mainwindow.py:190
+#: src/mainwindow.py:756
+msgid "Read-only"
+msgstr ""
+
+#: src/mainwindow.py:245
+#: src/mainwindow.py:1462
+#: src/upgrade.py:401
+msgid "Type your password"
+msgstr "Geben Sie Ihr Passwort ein"
+
+#: src/mainwindow.py:251
+#: src/mainwindow.py:681
+#: src/mainwindow.py:1467
+msgid "The password can not be empty!"
+msgstr "Das Passwort kann nicht leer sein!"
+
+#: src/mainwindow.py:258
+#: src/mainwindow.py:1482
+#: src/upgrade.py:83
+#: src/upgrade.py:126
+#: src/upgrade.py:350
+msgid "Invalid password!"
+msgstr "Ungültiges Passwort!"
+
+#: src/mainwindow.py:364
+#: src/upgrade.py:89
+msgid "Importing..."
+msgstr "Importiere ..."
+
+#: src/mainwindow.py:393
+msgid "New group"
+msgstr "Neue Gruppe"
+
+#: src/mainwindow.py:395
+#, python-format
+msgid "New group in \"%s\""
+msgstr "Neue Gruppe in \"%s\""
+
+#: src/mainwindow.py:408
+msgid "New item"
+msgstr "Neues Element"
+
+#: src/mainwindow.py:410
+#, python-format
+msgid "New item in group \"%s\""
+msgstr "Neues Element in Gruppe \"%s\""
+
+#: src/mainwindow.py:425
+#, python-format
+msgid "Are you sure you want to remove the group \"%s\" and all its items?"
+msgstr "Sind Sie sicher, daß Sie die Gruppe \"%s\" und alle ihre Elemente löschen wollen?"
+
+#: src/mainwindow.py:428
+#, python-format
+msgid "Are you sure you want to remove the item \"%s\" from the group \"%s\"?"
+msgstr "Sind Sie sicher, daß Sie das Element \"%s\" aus der Gruppe \"%s\" löschen wollen?"
+
+#: src/mainwindow.py:430
+#, python-format
+msgid "Are you sure you want to remove the item \"%s\"?"
+msgstr "Sind Sie sicher, daß Sie das Element \"%s\" löschen wollen?"
+
+#: src/mainwindow.py:483
+#, python-format
+msgid "New detail for item \"%s\""
+msgstr "Neues Detail für Element \"%s\""
+
+#: src/mainwindow.py:485
+#, python-format
+msgid "New detail for item \"%s\" in group \"%s\""
+msgstr "Neues Detail für Element \"%s\" in Gruppe \"%s\""
+
+#: src/mainwindow.py:516
+#: src/mainwindow.py:517
+msgid "translator-credits"
+msgstr "Hubert H.P. Wachter <Hubert.Wachter@gmx.li>"
+
+#: src/mainwindow.py:517
+#, fuzzy
+msgid "translater"
+msgstr "Hubert H.P. Wachter <Hubert.Wachter@gmx.li>"
+
+#: src/mainwindow.py:676
+msgid "Type your new password"
+msgstr "Geben Sie Ihr neues Passwort ein"
+
+#: src/mainwindow.py:685
+msgid "Retype your new password"
+msgstr "Geben Sie Ihr neues Passwort nochmals ein"
+
+#: src/mainwindow.py:690
+#: src/upgrade.py:360
+#: src/upgrade.py:381
+msgid "The passwords are not equals!"
+msgstr "Die Passworte sind nicht gleich!"
+
+#: src/mainwindow.py:692
+msgid "Changing password..."
+msgstr "Ändere Passwort ..."
+
+#: src/mainwindow.py:696
+msgid "Password changed!"
+msgstr "Passwort geändert!"
+
+#: src/mainwindow.py:699
+msgid "The password was not changed!"
+msgstr "Das Passwort wurde nicht geändert!"
+
+#: src/mainwindow.py:701
+msgid "There was an error and the password was not changed!"
+msgstr "Ein Fehler ist aufgetreten und das Passwort wurde nicht geändert!"
+
+#: src/mainwindow.py:754
+msgid "Allow editing"
+msgstr ""
+
+#: src/mainwindow.py:841
+msgid "Help file not found!"
+msgstr ""
+
+#: src/mainwindow.py:980
+msgid "Copy content"
+msgstr ""
+
+#: src/mainwindow.py:985
+msgid "Copy detail"
+msgstr ""
+
+#: src/mainwindow.py:989
+msgid "Cut detail"
+msgstr ""
+
+#: src/mainwindow.py:997
+msgid "Copy"
+msgstr ""
+
+#: src/mainwindow.py:1001
+msgid "Cut"
+msgstr ""
+
+#: src/mainwindow.py:1006
+msgid "Paste"
+msgstr ""
+
+#: src/mainwindow.py:1364
+msgid "Group"
+msgstr "Gruppe"
+
+#: src/mainwindow.py:1366
+msgid "Item"
+msgstr "Element"
+
+#: src/mainwindow.py:1368
+msgid "Detail name"
+msgstr "Detail Name"
+
+#: src/mainwindow.py:1370
+msgid "Detail text"
+msgstr "Detail Text"
+
+#: src/mainwindow.py:1372
+msgid "Find"
+msgstr "Suche"
+
+#: src/mainwindow.py:1428
+msgid "Error!"
+msgstr "Fehler!"
+
+#: src/mainwindow.py:1428
+#, python-format
+msgid ""
+"An error has ocurred and a log was saved in \"%s\".\n"
+"\n"
+"Send it to the developer: pysafe@aguilarj.com."
+msgstr ""
+"Ein Fehler ist aufgetreten und ein Protokoll wurde in \"%s\".\n"
+"\n"
+"Senden Sie es bitte an den Entwickler: pysafe@aguilarj.com"
+
+#: src/mainwindow.py:1474
+msgid "The database are not updataple. Check file permissions or disk space."
+msgstr "Die Datenbank ist nicht updatebar. Prüfen Sie Zugriffsrechte und freien Speicherplatz."
+
+#: src/mainwindow.py:1477
+#, python-format
+msgid ""
+"Database file not found:\n"
+"\"%s\""
+msgstr ""
+"Datenbank nicht gefunden:\n"
+"\"%s\""
+
+#: src/mainwindow.py:1480
+#: src/upgrade.py:79
+#: src/upgrade.py:122
+#: src/upgrade.py:346
+msgid "An undefined error has ocurred!"
+msgstr "Ein unbestimmter Fehler ist aufgetreten!"
+
+#: src/mainwindow.py:1484
+#: src/upgrade.py:85
+#: src/upgrade.py:128
+#: src/upgrade.py:352
+msgid "Database corrupted or invalid password!"
+msgstr "Datenbank korrupt oder falsches Passwort!"
+
+#: src/upgrade.py:43
+msgid "Upgrade Wizard"
+msgstr "Upgrade Assistent"
+
+#: src/upgrade.py:69
+#, python-format
+msgid "The file \"%s\" already exists. Overwrite?"
+msgstr "Die Datei \"%s\" existiert bereits. Überschreiben?"
+
+#: src/upgrade.py:81
+#: src/upgrade.py:348
+msgid "Database file not found. There was an error creating the database."
+msgstr "Datenbank Datei nicht gefunden. Fehler bei der Erstellung der Datenbank."
+
+#: src/upgrade.py:89
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: src/upgrade.py:124
+msgid "Database file not found"
+msgstr "Datenbank Datei nicht gefunden"
+
+#: src/upgrade.py:140
+msgid ""
+"This wizard will guide you through the upgrading process.\n"
+"\n"
+"The database will be converted to the new format."
+msgstr ""
+"Dieser Assistent wird Sie durch den Upgrade Vorgang führen.\n"
+"\n"
+"Die Datenbank wird in das neue Format konvertiert."
+
+#: src/upgrade.py:153
+#: src/upgrade.py:430
+msgid "Type your current password"
+msgstr "Geben Sie ihr aktuelles Passwort ein"
+
+#: src/upgrade.py:172
+#: src/upgrade.py:449
+msgid "Enter the database name and location"
+msgstr "Geben Sie den Namen und den Ort der Datenbank ein"
+
+#: src/upgrade.py:303
+msgid "Setup Wizard"
+msgstr "Setup Assistent"
+
+#: src/upgrade.py:388
+msgid "This wizard will guide you through the setup process."
+msgstr "Dieser Assistent wird Sie durch den Setup Vorgang führen."
+
+#: src/upgrade.py:404
+msgid "Retype your password"
+msgstr "Geben Sie Ihr Passwort erneut ein."
+
+#: src/upgrade.py:459
+msgid "Overwrite"
+msgstr "Überschreiben"
+
+#: src/upgrade.py:462
+msgid "(if unchecked and the file exists will try to use it)"
+msgstr "(wenn nicht gewählt und existierender Datei wird versucht diese zu benutzen"
+
+#: src/config.py:131
+msgid "start read-only"
+msgstr ""
+
+#: src/config.py:137
+msgid "auto-rotate (if available)"
+msgstr "Automatisches Drehen (falls verfügbar)"
+
+#: src/config.py:143
+msgid "seconds to auto-lock (0 disables)"
+msgstr "Sekunden bis zur Auto-Sperre (0 deaktiviert)"
+
