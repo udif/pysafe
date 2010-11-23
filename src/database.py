@@ -82,6 +82,10 @@ class Dados:
     return self.__readonly
 
 
+  def setReadOnly(self, mode):
+    self.__readonly = mode
+
+
   def __encrypt(self, txt, bf):
     if bf is not None and txt is not None and len(txt) > 0:
       tmp = "%i;%s" % (len(txt), txt)
@@ -364,6 +368,70 @@ class Dados:
     c.execute("update info set label = ?, timestamp = strftime('%s','now') where id = ?", (self.__encrypt(label, self.__blowfish), id,))
     self.__connection.commit()
     c.close()
+
+
+  def move(self, src, dst):
+    if self.__readonly:
+      return
+
+    # pega os dados da origem...
+    (idO, tipoO, posO, labelO, valueO, idPaiO) = self.getCurrent(src)
+    # e valida o destino! Se origem é um detalhe o destino deve ser um item,
+    # mas se origem é um item ou grupo o destino deve ser um grupo!
+    if dst != 0:
+      (idD, tipoD, posD, labelD, valueD, idPaiD) = self.getCurrent(dst)
+      if tipoD == 'd':
+        dst = idPaiD
+      if tipoO != 'd':
+        while tipoD != 'g':
+          (idD, tipoD, posD, labelD, valueD, idPaiD) = self.getCurrent(dst)
+          dst = idPaiD
+
+    c = self.__connection.cursor()
+    c.execute("update info set parent = ?, timestamp = strftime('%s','now') where id = ?", (dst, src, ))
+    self.__connection.commit()
+
+    return src
+
+
+  def copy(self, src, dst):
+    self.beginTransaction()
+
+    # pega os dados da origem...
+    (idO, tipoO, posO, labelO, valueO, idPaiO) = self.getCurrent(src)
+    # e valida o destino! Se origem é um detalhe o destino deve ser um item,
+    # mas se origem é um item ou grupo o destino deve ser um grupo!
+    if dst != 0:
+      (idD, tipoD, posD, labelD, valueD, idPaiD) = self.getCurrent(dst)
+      if tipoD == 'd':
+        dst = idPaiD
+      if tipoO != 'd':
+        while tipoD != 'g':
+          (idD, tipoD, posD, labelD, valueD, idPaiD) = self.getCurrent(dst)
+          dst = idPaiD
+
+    id = self.__add_element(dst, tipoO, labelO, valueO)
+    if id != None:
+      if not self.__copy(src, id):
+        id = None
+
+    self.commitTransaction()
+
+    return id
+
+
+  def __copy(self, src, dst):
+    items = self.get(src)
+    for (id, tipo, pos, name, value) in items:
+      id1 = self.__add_element(dst, tipo, name, value)
+      if id1 == None:
+        self.rollbackTransaction()
+        return False
+      if tipo != 'd':
+        if not self.__copy(id, id1):
+          return False
+
+    return True
 
 
   def beginTransaction(self):
