@@ -14,6 +14,7 @@ class Configuration:
   AUTO_ROTATION = 3
   DATABASE_FILE = 4
   AUTO_LOCK_TIME = 5
+  START_READ_ONLY = 6
 
 
   def __init__(self):
@@ -73,6 +74,10 @@ class Configuration:
         tmp = 30
     self.__config.set('General', 'lock_time', tmp)
 
+    # valida iniciar somente-leitura
+    if not self.__config.has_option('General', 'start_readonly'):
+      self.__config.set('General', 'start_readonly', '0')
+
     # verifica a versão
     if not self.__config.has_option('General', 'version'):
       self.__config.set('General', 'version', '0')
@@ -91,6 +96,8 @@ class Configuration:
       return self.__config.get('General', 'dbfile')
     elif item == self.VERSION:
       return self.__config.get('General', 'version')
+    elif item == self.START_READ_ONLY:
+      return self.__config.getint('General', 'start_readonly')
 
     return None
 
@@ -111,6 +118,8 @@ class Configuration:
       self.__config.set('General', 'dbfile', value)
     elif item == self.VERSION:
       self.__config.set('General', 'version', value)
+    elif item == self.START_READ_ONLY:
+      self.__config.set('General', 'start_readonly', value)
 
     self.__save()
 
@@ -118,6 +127,12 @@ class Configuration:
     window = QDialog(parent)
     window.setWindowTitle(" ")
     window.setModal(True)
+
+    readonly = QCheckBox(_("start read-only"), window)
+    if self.get(self.START_READ_ONLY) == 1:
+      readonly.setCheckState(Qt.Checked)
+    else:
+      readonly.setCheckState(Qt.Unchecked)
 
     rotate = QCheckBox(_("auto-rotate (if available)"), window)
     if self.get(self.AUTO_ROTATION) == 0:
@@ -129,12 +144,13 @@ class Configuration:
     lock = QLineEdit(window)
     lock.setInputMask("0000")
     lock.setText(str(self.get(self.AUTO_LOCK_TIME)))
-    lock.setEnabled(False)
 
     button = QDialogButtonBox(QDialogButtonBox.Save, Qt.Horizontal, window)
     window.connect(button, SIGNAL('accepted()'), window, SLOT('accept()'))
 
     layout = QVBoxLayout(window)
+    layout.addWidget(readonly)
+    layout.addStretch(1)
     layout.addWidget(rotate)
     layout.addStretch(1)
     layout1 = QHBoxLayout()
@@ -142,10 +158,14 @@ class Configuration:
     layout1.addWidget(lock_label)
     layout1.addStretch(1)
     layout.addLayout(layout1)
-    layout.addWidget(QLabel("(auto-lock disabled due to problems with the menu)"))
     layout.addWidget(button)
 
     if window.exec_() == QDialog.Accepted:
+      if readonly.checkState() == Qt.Checked:
+        self.set(self.START_READ_ONLY, 1)
+      else:
+        self.set(self.START_READ_ONLY, 0)
+
       if rotate.checkState() == Qt.Checked:
         self.set(self.AUTO_ROTATION, 1)
       else:
