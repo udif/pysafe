@@ -5,9 +5,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: pySafe 0.8\n"
-"POT-Creation-Date: 2010-06-17 00:25+BRT\n"
-"PO-Revision-Date: 2010-06-17 22:18-0300\n"
-"Last-Translator: Ithier de Lestrange <idl@gesco.fr>\n" 
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-11-23 18:38-0200\n"
+"PO-Revision-Date: 2010-11-23 18:57-0300\n"
+"Last-Translator: Jorge Aguilar <n900@aguilarj.com>\n"
 "Language-Team: Ithier <pysafe@ithier.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -15,23 +16,13 @@ msgstr ""
 "Language: \n"
 "Generated-By: pygettext.py 1.5\n"
 
-msgid "translator-credits"
-msgstr "Ithier de Lestrange <pysafe@ithier.com>" 
-
-#: src/config.py:120
-msgid "auto-rotate (if available)"
-msgstr "Rotation automatique (si disponible)"
-
-#: src/config.py:126
-msgid "seconds to auto-lock (0 disables)"
-msgstr "secondes avant verrouillage automatique (0 pour désactiver)"
-
 #: src/import_data.py:28
 msgid "Import Wizard"
 msgstr "Assistant d'import"
 
 #: src/import_data.py:46
 #: src/import_data.py:142
+#, python-format
 msgid "File \"%s\" does not exist or it was not possible open it."
 msgstr "Le fichier \"%s\" n'existe pas ou ne peut pas être ouvert."
 
@@ -65,139 +56,197 @@ msgstr "Keyring pour PalmOS (xml)"
 msgid "Note"
 msgstr "Note"
 
-#: src/mainwindow.py:155
+#: src/mainwindow.py:175
 msgid "Change password"
 msgstr "Modifier le mot de passe"
 
-#: src/mainwindow.py:158
+#: src/mainwindow.py:178
 msgid "About"
 msgstr "A propos"
 
-#: src/mainwindow.py:161
+#: src/mainwindow.py:181
+msgid "Help"
+msgstr ""
+
+#: src/mainwindow.py:184
 msgid "Import"
 msgstr "Importer"
 
-#: src/mainwindow.py:164
+#: src/mainwindow.py:187
 msgid "Settings"
 msgstr "Paramètres"
 
-#: src/mainwindow.py:202
-#: src/mainwindow.py:1149
+#: src/mainwindow.py:190
+#: src/mainwindow.py:756
+msgid "Read-only"
+msgstr ""
+
+#: src/mainwindow.py:245
+#: src/mainwindow.py:1462
 #: src/upgrade.py:401
 msgid "Type your password"
 msgstr "Saisissez votre mot de passe"
 
-#: src/mainwindow.py:208
-#: src/mainwindow.py:604
-#: src/mainwindow.py:1154
+#: src/mainwindow.py:251
+#: src/mainwindow.py:681
+#: src/mainwindow.py:1467
 msgid "The password can not be empty!"
 msgstr "Le mot de passe ne peut pas être vide"
 
-#: src/mainwindow.py:215
-#: src/mainwindow.py:1169
+#: src/mainwindow.py:258
+#: src/mainwindow.py:1482
 #: src/upgrade.py:83
 #: src/upgrade.py:126
 #: src/upgrade.py:350
 msgid "Invalid password!"
 msgstr "Mot de passe erroné !"
 
-#: src/mainwindow.py:317
+#: src/mainwindow.py:364
 #: src/upgrade.py:89
 msgid "Importing..."
 msgstr "Import..."
 
-#: src/mainwindow.py:346
+#: src/mainwindow.py:393
 msgid "New group"
 msgstr "Nouveau groupe"
 
-#: src/mainwindow.py:348
+#: src/mainwindow.py:395
+#, python-format
 msgid "New group in \"%s\""
 msgstr "Nouveau groupe dans \"%s\""
 
-#: src/mainwindow.py:361
+#: src/mainwindow.py:408
 msgid "New item"
 msgstr "Nouvelle fiche"
 
-#: src/mainwindow.py:363
+#: src/mainwindow.py:410
+#, python-format
 msgid "New item in group \"%s\""
 msgstr "Nouvelle fiche dans le groupe \"%s\""
 
-#: src/mainwindow.py:378
+#: src/mainwindow.py:425
+#, python-format
 msgid "Are you sure you want to remove the group \"%s\" and all its items?"
 msgstr "Voulez-vous supprimer le groupe \"%s\" et toutes ses fiches ?"
 
-#: src/mainwindow.py:381
+#: src/mainwindow.py:428
+#, python-format
 msgid "Are you sure you want to remove the item \"%s\" from the group \"%s\"?"
 msgstr "Voulez-vous supprimer la fiche \"%s\" du groupe \"%s\" ?"
 
-#: src/mainwindow.py:383
+#: src/mainwindow.py:430
+#, python-format
 msgid "Are you sure you want to remove the item \"%s\"?"
 msgstr "Voulez-vous supprimer la fiche \"%s\" ?"
 
-#: src/mainwindow.py:436
+#: src/mainwindow.py:483
+#, python-format
 msgid "New detail for item \"%s\""
 msgstr "Nouveau champ de la fiche \"%s\""
 
-#: src/mainwindow.py:438
+#: src/mainwindow.py:485
+#, python-format
 msgid "New detail for item \"%s\" in group \"%s\""
 msgstr "Nouveau champ de la fiche \"%s\" du groupe \"%s\""
 
-#: src/mainwindow.py:599
+#: src/mainwindow.py:516
+#: src/mainwindow.py:517
+msgid "translator-credits"
+msgstr "Ithier de Lestrange <pysafe@ithier.com>"
+
+#: src/mainwindow.py:517
+#, fuzzy
+msgid "translater"
+msgstr "Ithier de Lestrange <pysafe@ithier.com>"
+
+#: src/mainwindow.py:676
 msgid "Type your new password"
 msgstr "Saisissez votre nouveau mot de passe"
 
-#: src/mainwindow.py:608
+#: src/mainwindow.py:685
 msgid "Retype your new password"
 msgstr "Re-saisissez votre mot de passe"
 
-#: src/mainwindow.py:613
+#: src/mainwindow.py:690
 #: src/upgrade.py:360
 #: src/upgrade.py:381
 msgid "The passwords are not equals!"
 msgstr "Les mots de passes ne sont pas identiques"
 
-#: src/mainwindow.py:615
+#: src/mainwindow.py:692
 msgid "Changing password..."
 msgstr "Modifier le mot de passe..."
 
-#: src/mainwindow.py:619
+#: src/mainwindow.py:696
 msgid "Password changed!"
 msgstr "Le mot de passe a été changé !"
 
-#: src/mainwindow.py:622
+#: src/mainwindow.py:699
 msgid "The password was not changed!"
 msgstr "Le mot de passe n'a pas été changé !"
 
-#: src/mainwindow.py:624
+#: src/mainwindow.py:701
 msgid "There was an error and the password was not changed!"
 msgstr "Erreur, le mot de pas n'a pas pu être changé !"
 
-#: src/mainwindow.py:887
-#: src/upgrade.py:89
-msgid "Cancel"
-msgstr "Annuler"
+#: src/mainwindow.py:754
+msgid "Allow editing"
+msgstr ""
 
-#: src/mainwindow.py:1051
+#: src/mainwindow.py:841
+msgid "Help file not found!"
+msgstr ""
+
+#: src/mainwindow.py:980
+msgid "Copy content"
+msgstr ""
+
+#: src/mainwindow.py:985
+msgid "Copy detail"
+msgstr ""
+
+#: src/mainwindow.py:989
+msgid "Cut detail"
+msgstr ""
+
+#: src/mainwindow.py:997
+msgid "Copy"
+msgstr ""
+
+#: src/mainwindow.py:1001
+msgid "Cut"
+msgstr ""
+
+#: src/mainwindow.py:1006
+msgid "Paste"
+msgstr ""
+
+#: src/mainwindow.py:1364
 msgid "Group"
 msgstr "Groupe"
 
-#: src/mainwindow.py:1053
+#: src/mainwindow.py:1366
 msgid "Item"
 msgstr "Fiche"
 
-#: src/mainwindow.py:1055
+#: src/mainwindow.py:1368
 msgid "Detail name"
 msgstr "Nom du champ"
 
-#: src/mainwindow.py:1057
+#: src/mainwindow.py:1370
 msgid "Detail text"
 msgstr "Texte du champ"
 
-#: src/mainwindow.py:1059
+#: src/mainwindow.py:1372
 msgid "Find"
 msgstr "Chercher"
 
-#: src/mainwindow.py:1115
+#: src/mainwindow.py:1428
+msgid "Error!"
+msgstr "Erreur !"
+
+#: src/mainwindow.py:1428
+#, python-format
 msgid ""
 "An error has ocurred and a log was saved in \"%s\".\n"
 "\n"
@@ -207,15 +256,12 @@ msgstr ""
 "\n"
 "Envoyez-le au développeur : pysafe@aguilarj.com."
 
-#: src/mainwindow.py:1115
-msgid "Error!"
-msgstr "Erreur !"
-
-#: src/mainwindow.py:1161
+#: src/mainwindow.py:1474
 msgid "The database are not updataple. Check file permissions or disk space."
 msgstr "Le fichier des mots de passe ne peut pas être mise à jour. Vérifier les permissions et l'espace disque."
 
-#: src/mainwindow.py:1164
+#: src/mainwindow.py:1477
+#, python-format
 msgid ""
 "Database file not found:\n"
 "\"%s\""
@@ -223,14 +269,14 @@ msgstr ""
 "Fichier des mots de passe non trouvé:\n"
 "\"%s\""
 
-#: src/mainwindow.py:1167
+#: src/mainwindow.py:1480
 #: src/upgrade.py:79
 #: src/upgrade.py:122
 #: src/upgrade.py:346
 msgid "An undefined error has ocurred!"
 msgstr "Une erreur inattendue s'est produite !"
 
-#: src/mainwindow.py:1171
+#: src/mainwindow.py:1484
 #: src/upgrade.py:85
 #: src/upgrade.py:128
 #: src/upgrade.py:352
@@ -242,6 +288,7 @@ msgid "Upgrade Wizard"
 msgstr "Assistant de mise à jour"
 
 #: src/upgrade.py:69
+#, python-format
 msgid "The file \"%s\" already exists. Overwrite?"
 msgstr "Le fichier \"%s\" existe déjà. L'écraser ?"
 
@@ -249,6 +296,10 @@ msgstr "Le fichier \"%s\" existe déjà. L'écraser ?"
 #: src/upgrade.py:348
 msgid "Database file not found. There was an error creating the database."
 msgstr "Le fichier des mots de passe n'existe pas. Il y a eu une erreur lors de sa création."
+
+#: src/upgrade.py:89
+msgid "Cancel"
+msgstr "Annuler"
 
 #: src/upgrade.py:124
 msgid "Database file not found"
@@ -293,3 +344,16 @@ msgstr "Écraser"
 #: src/upgrade.py:462
 msgid "(if unchecked and the file exists will try to use it)"
 msgstr "(si non sélectionné et le fichier existe, on essaiera de l'utiliser)"
+
+#: src/config.py:131
+msgid "start read-only"
+msgstr ""
+
+#: src/config.py:137
+msgid "auto-rotate (if available)"
+msgstr "Rotation automatique (si disponible)"
+
+#: src/config.py:143
+msgid "seconds to auto-lock (0 disables)"
+msgstr "secondes avant verrouillage automatique (0 pour désactiver)"
+
