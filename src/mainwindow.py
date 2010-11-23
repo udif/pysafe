@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
+import pdb
 import gettext
 import os
 import sys
 import util
 import tempfile
+import dbus
+import locale
 from rotation import FremantleRotation
 from database import Dados
 from config import Configuration
-
+from dbus.mainloop.qt import DBusQtMainLoop
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 
@@ -32,12 +35,19 @@ class MainWindow(QMainWindow):
     self.lastWidgetWithFocus = None
     self.detailView = self.DETAIL_ALL_VIEW
 
+    self.__readonly = self.config.get(Configuration.START_READ_ONLY) == 1
+
     # define propriedades da janela
     self.setWindowTitle("pySafe")
     self.setWindowIcon(util.getIcon("pysafe_48x48.png"))
 
+    self.helpWindow = HelpWindow(self)
+
     # adiciona o menu
     self.__create_menu()
+
+    # menu de contexto
+    self.contextMenu = ContextMenu(self)
 
     # cria o widget central
     centralwidget = QWidget()
@@ -46,7 +56,7 @@ class MainWindow(QMainWindow):
 
     # cria o treeview e o modelo
     listwidget = QWidget()
-    self.groupList = TreeView(listwidget, self.setLastWidgetWithFocus, self.rename)
+    self.groupList = TreeView(listwidget, self.setLastWidgetWithFocus, self.rename, self.showContextMenu)
     self.groupList.setModel(StandardItemModel())
     self.groupList.setHeaderHidden(True)
     self.groupList.clicked.connect(self.groupListClicked)
@@ -135,15 +145,25 @@ class MainWindow(QMainWindow):
     self.splitterHorizontal.addWidget(detailwidget)
 
     self.lockTimer = QTimer(self)
-    # FIXME self.lockTimer.timeout.connect(self.lockWindow)
+    self.lockTimer.timeout.connect(self.lockWindow)
+
+    loop = DBusQtMainLoop(set_as_default=True)
+    system_bus = dbus.SystemBus(mainloop=loop)
+    system_bus.add_signal_receiver(self.screenSignal,
+                                   path='/com/nokia/mce/signal',
+                                   signal_name='display_status_ind',
+                                   dbus_interface='com.nokia.mce.signal')
 
     # verifica se estamos no Maemo (e portanto temos rotação)
     self.MAEMO5 =  hasattr(Qt, "WA_Maemo5PortraitOrientation")
 
     self.orientation = "none"
     if self.MAEMO5:
+      # para fazer as janelas serem "stacked" (basicamente a janela de ajuda)
+      self.setAttribute(Qt.WA_Maemo5StackedWindow)
+
       # cria o objeto responsável pela rotação da tela
-      self.rotation_object = FremantleRotation("pySafe", cb=self.screen_rotation)
+      self.rotation_object = FremantleRotation(system_bus, "pySafe", cb=self.screen_rotation)
       # o deixa desativado por enquanto! Só ativa quando exibir a janela em si
       self.rotation_object.set_mode(FremantleRotation.NEVER)
 
@@ -158,18 +178,38 @@ class MainWindow(QMainWindow):
     self.about_action = QAction(_("About"), self)
     self.about_action.triggered.connect(self.about_clicked)
 
+    self.help_action = QAction(_("Help"), self)
+    self.help_action.triggered.connect(self.help_clicked)
+
     self.import_action = QAction(_("Import"), self)
     self.import_action.triggered.connect(self.import_from_file_clicked)
 
     self.settings_action = QAction(_("Settings"), self)
     self.settings_action.triggered.connect(self.settings_clicked)
 
-    self.menubar = self.menuBar()
-    self.menubar.clear()
-    self.menubar.addAction(self.import_action)
-    self.menubar.addAction(self.change_pass_action)
-    self.menubar.addAction(self.settings_action)
-    self.menubar.addAction(self.about_action)
+    self.edit_action = QAction(_("Read-only"), self)
+    self.edit_action.triggered.connect(self.edit_items_clicked)
+
+    menubar = MyMenuBar(self)
+    self.setMenuBar(menubar)
+    menubar.clear()
+    menubar.addAction(self.import_action)
+    menubar.addAction(self.change_pass_action)
+    menubar.addAction(self.edit_action)
+    menubar.addAction(self.settings_action)
+    menubar.addAction(self.help_action)
+    menubar.addAction(self.about_action)
+
+
+  def screenSignal(self, state, *params):
+    if state == 'off' and self.lockTimer.isActive():
+      # FIXME dá crash no programa!
+      print "lock"
+      #self.lockWindow()
+
+
+  def showContextMenu(self, widget, event):
+    self.contextMenu.show(widget, event, self)
 
 
   def event(self, event):
@@ -194,6 +234,9 @@ class MainWindow(QMainWindow):
 
 
   def lockWindow(self):
+    if self.menuBar().isShowed or self.helpWindow.isVisible():
+      return
+
     self.lockTimer.stop()
     self.centralWidget().hide()
 
@@ -350,7 +393,7 @@ class MainWindow(QMainWindow):
     title = _("New group")
     if len(grupos) > 0:
       title = _("New group in \"%s\"") % grupos
-    (text, response) = QInputDialog.getText(self, " ", title)
+    (text, response) = util.getText(self, label = title)
 
     if response == True:
       id = 0
@@ -365,7 +408,7 @@ class MainWindow(QMainWindow):
     title = _("New item")
     if len(grupos) > 0:
       title = (_("New item in group \"%s\"") % grupos)
-    (text, response) = QInputDialog.getText(self, " ", title)
+    (text, response) = util.getText(self, label = title)
     if response == True:
       id = 0
       if self.selectedItem is not None:
@@ -440,7 +483,7 @@ class MainWindow(QMainWindow):
       title = (_("New detail for item \"%s\"") % self.selectedItem.text())
     else:
       title = (_("New detail for item \"%s\" in group \"%s\"") % (self.selectedItem.text(), grupos))
-    (text, response) = QInputDialog.getText(None, " ", title)
+    (text, response) = util.getText(self, label = title)
 
     if response == True:
       id = self.database.add_detail(self.selectedItem.getId(), str(text.toUtf8()))
@@ -471,8 +514,12 @@ class MainWindow(QMainWindow):
   def about_clicked(self):
     text = "(2010) Jorge Aguilar (pysafe@aguilarj.com)"
     if _("translator-credits") != "translator-credits":
-      text = "%s\n\n%s" % (text, _("translator-credits"))
+      text = "%s\n\n%s: %s" % (text, _("translater"), _("translator-credits"))
     QMessageBox.about(self, "pySafe %s" % (VERSION), text)
+
+
+  def help_clicked(self):
+    self.helpWindow.show()
 
 
   def settings_clicked(self):
@@ -488,7 +535,14 @@ class MainWindow(QMainWindow):
     self.__configLockTimer()
 
 
+  def edit_items_clicked(self):
+    self.__readonly = not self.__readonly
+    self.showDetailsForItem()
+
+
   def showDetailsForItem(self, focus = None):
+    ro = self.__readonly or (not self.database is None and self.database.isReadOnly())
+
     # não quero que o objeto seja apagado, mas apenas escondido
     self.deleteDetailList.setParent(None)
 
@@ -511,7 +565,7 @@ class MainWindow(QMainWindow):
       for i in items:
         (id, tipo, pos, labelText, text) = i
         if self.detailView == self.DETAIL_EDIT_VIEW:
-          it = GroupListItem(QString.fromUtf8(labelText), id, tipo, not self.database.isReadOnly())
+          it = GroupListItem(QString.fromUtf8(labelText), id, tipo, not ro)
           self.deleteDetailList.model().appendRow(it)
 
           if focus is not None and id in focus:
@@ -522,9 +576,9 @@ class MainWindow(QMainWindow):
           label = QLabel(QString.fromUtf8(labelText), widget)
           teste.addWidget(label)
 
-          view = MyLineEdit(QString.fromUtf8(text), widget, id, self.textview_changed, self.setLastWidgetWithFocus, pos, self.showDetailsEdit)
+          view = MyLineEdit(QString.fromUtf8(text), widget, id, self.textview_changed, self.setLastWidgetWithFocus, pos, self.showDetailsEdit, self.showContextMenu)
           view.setCursorPosition(0)
-          view.setReadOnly(self.database.isReadOnly() or self.orientation == "portrait")
+          view.setReadOnly(ro or self.orientation == "portrait")
           view.setLast(pos == len(items) - 1)
           if focus == id:
             widgetVisible = view
@@ -536,9 +590,15 @@ class MainWindow(QMainWindow):
             label = QLabel(QString.fromUtf8(labelText), widget)
             teste.addWidget(label)
 
-            # FIXME não aparece o scrollbar
-            view = PlainTextEdit(QString.fromUtf8(text), widget, id, self.textview_changed, self.setLastWidgetWithFocus)
-            view.setReadOnly(self.database.isReadOnly() or self.orientation == "portrait")
+            view = PlainTextEdit(QString.fromUtf8(text), widget, id, self.textview_changed, self.setLastWidgetWithFocus, self.showContextMenu)
+            if self.MAEMO5:
+              # scroll thanks to this thread: http://talk.maemo.org/archive/index.php/t-52991.html
+              scroll = view.property("kineticScroller").toPyObject()
+              scroll.setEnabled(True)
+              #scroll.setMode(QAbstractKineticScroller.PushMode)
+              scroll.setMinimumVelocity(0.1)
+              scroll.setMaximumVelocity(0.5)
+            view.setReadOnly(ro or self.orientation == "portrait")
             teste.addWidget(view)
 
     self.deleteDetailList.selectionModel().select(selectionModel, QItemSelectionModel.Select)
@@ -561,6 +621,8 @@ class MainWindow(QMainWindow):
 
 
   def showItens(self, path = 0, parent = None):
+    ro = self.__readonly or self.database.isReadOnly()
+
     if parent is None:
       model = self.groupList.model()
       model.clear()
@@ -571,7 +633,7 @@ class MainWindow(QMainWindow):
     el = self.database.get(path)
     for i in el:
       (id, tipo, pos, label, text) = i
-      item = GroupListItem(QString.fromUtf8(label), id, tipo, not self.database.isReadOnly())
+      item = GroupListItem(QString.fromUtf8(label), id, tipo, not ro)
       parent.appendRow(item)
       if tipo == "g":
         self.showItens(id, item)
@@ -582,6 +644,8 @@ class MainWindow(QMainWindow):
 
 
   def addItem(self, text, id, tipo, element):
+    ro = self.__readonly or self.database.isReadOnly()
+
     model = self.groupList.model()
 
     # se há um elemento deve procurar pelo primeiro pai que seja um grupo (ou a raiz)
@@ -594,10 +658,12 @@ class MainWindow(QMainWindow):
       element = model.invisibleRootItem().child(0)
 
     # adiciona o item
-    i = GroupListItem(QString.fromUtf8(text), id, tipo, not self.database.isReadOnly())
+    i = GroupListItem(QString.fromUtf8(text), id, tipo, not ro)
     element.appendRow(i)
 
     model.sort(0)
+
+    return i
 
 
   def textview_changed(self, src, detail, id):
@@ -643,6 +709,7 @@ class MainWindow(QMainWindow):
     if self.orientation == "portrait":
       self.change_pass_action.setVisible(False)
       self.import_action.setVisible(False)
+      self.edit_action.setVisible(False)
       self.settings_action.setVisible(False)
 
       self.add_group_button.setVisible(False)
@@ -658,6 +725,7 @@ class MainWindow(QMainWindow):
     else:
       self.change_pass_action.setVisible(True)
       self.import_action.setVisible(True)
+      self.edit_action.setVisible(True)
       self.settings_action.setVisible(True)
 
       self.import_action.setEnabled(True)
@@ -667,6 +735,9 @@ class MainWindow(QMainWindow):
       self.add_group_button.setVisible(True)
       self.add_item_button.setVisible(True)
       self.del_item_group_button.setVisible(True)
+
+      self.add_group_button.setEnabled(True)
+      self.add_item_button.setEnabled(True)
 
       self.find_button.setVisible(True)
 
@@ -679,7 +750,14 @@ class MainWindow(QMainWindow):
       self.delete_detail_button.setVisible(self.detailView == self.DETAIL_EDIT_VIEW)
       self.cancel_del_detail_button.setVisible(self.detailView != self.DETAIL_ALL_VIEW)
 
-      if self.database is not None and self.database.isReadOnly():
+      if self.__readonly:
+        self.edit_action.setText(_("Allow editing"))
+      else:
+        self.edit_action.setText(_("Read-only"))
+
+      if self.__readonly or (self.database is not None and self.database.isReadOnly()):
+        if self.database is not None and self.database.isReadOnly():
+          self.edit_action.setEnabled(False)
         self.import_action.setEnabled(False)
         self.change_pass_action.setEnabled(False)
         self.add_group_button.setEnabled(False)
@@ -723,9 +801,78 @@ class MainWindow(QMainWindow):
           self.down_detail_button.setEnabled(enableDown)
 
 
+class HelpWindow(QMainWindow):
+
+  def __init__(self, parent):
+    QMainWindow.__init__(self, parent)
+    self.__created = False
+
+  def show(self):
+    if not self.__created:
+      self.setAttribute(Qt.WA_Maemo5StackedWindow)
+
+      #self.setObjectName("HelpWindow")
+      #self.resize(800, 440)
+      self.setSizeIncrement(QSize(0, 0))
+      centralwidget = QWidget(self)
+      #centralwidget.setObjectName("centralwidget")
+      textBrowser = QTextBrowser(centralwidget)
+      textBrowser.setGeometry(QRect(10, 10, 781, 411))
+      textBrowser.setAutoFillBackground(True)
+      textBrowser.setFrameShape(QFrame.NoFrame)
+      textBrowser.setFrameShadow(QFrame.Plain)
+      textBrowser.setReadOnly(True)
+      textBrowser.setOpenExternalLinks(True)
+      #textBrowser.setObjectName("textBrowser")
+      self.setCentralWidget(centralwidget)
+
+      # busca o arquivo correto, se houver no idioma atual!
+      fn = 'help'; ext = 'html'
+      (lc, enc) = locale.getdefaultlocale()
+      f = os.path.join(sys.path[0], '%s_%s.%s' % (fn, lc, ext))
+      if not os.path.exists(f):
+        i = lc.find('_')
+        if i != -1:
+          lc = lc[:i]
+        f = os.path.join(sys.path[0], '%s_%s.%s' % (fn, lc, ext))
+        if not os.path.exists(f):
+          f = os.path.join(sys.path[0], '%s.%s' % (fn, ext))
+
+      txt = '<html><h1><b><center>%s</center></b></h1></html>' % _('Help file not found!')
+      if os.path.exists(f):
+        file = open(f, 'r')
+        txt=""
+        for line in file:
+          txt = ('%s%s' % (txt, line))
+        file.close()
+
+      textBrowser.setHtml(txt)
+
+      self.__created = True
+
+    QMainWindow.show(self)
+
+
+'''
+É necessário estender o menu para que possa ter controle de quando ele é exibido devido ao bug #6264
+'''
+class MyMenuBar(QMenuBar):
+
+  def __init__(self, parent = None):
+    QMenuBar.__init__(self, parent)
+    self.isShowed = False
+
+  def event(self, event):
+    if event.type() == QEvent.WindowBlocked:
+      self.isShowed = True
+    elif event.type() == QEvent.WindowUnblocked:
+      self.isShowed = False
+    return QMenuBar.event(self, event)
+
+
 class MyLineEdit(QLineEdit):
 
-  def __init__(self, text = None, parent = None, id = 0, callback = None, focus = None, pos = 0, dbClick = None):
+  def __init__(self, text = None, parent = None, id = 0, callback = None, focus = None, pos = 0, dbClick = None, context = None):
     QLineEdit.__init__(self, text, parent)
     try:
       # evitar o uso dicionário interno do aparelho (e impedir
@@ -740,6 +887,7 @@ class MyLineEdit(QLineEdit):
     self.__position = pos
     self.__last = False
     self.__dbClick = dbClick
+    self.__context = context
 
   def getId(self):
     return self.__id
@@ -766,10 +914,20 @@ class MyLineEdit(QLineEdit):
     if self.__dbClick is not None:
       self.__dbClick(self.getId())
 
+  def contextMenuEvent(self, event):
+    if self.__context is not None:
+      self.__context(self, event)
+
+  def clipboardCopy(self):
+    QApplication.clipboard().setText(self.text())
+
+  def clipboardPaste(self, text):
+    self.insert(text)
+
 
 class PlainTextEdit(QPlainTextEdit):
 
-  def __init__(self, text = None, parent = None, id = None, callback = None, focus = None):
+  def __init__(self, text = None, parent = None, id = None, callback = None, focus = None, context = None):
     QPlainTextEdit.__init__(self, text, parent)
     try:
       self.setInputMethodHints(Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase)
@@ -779,6 +937,7 @@ class PlainTextEdit(QPlainTextEdit):
     self.__id = id
     self.__callback = callback
     self.__focus = focus
+    self.__context = context
 
   def getId(self):
     if type(self.__id) is QString:
@@ -794,15 +953,153 @@ class PlainTextEdit(QPlainTextEdit):
     if self.__focus is not None:
       self.__focus(self)
 
+  def contextMenuEvent(self, event):
+    if self.__context is not None:
+      self.__context(self, event)
+
+  def clipboardCopy(self):
+    QApplication.clipboard().setText(self.toPlainText())
+
+  def clipboardPaste(self, text):
+    self.insertPlainText(text)
+
+
+class ContextMenu(QMenu):
+
+  def __init__(self, parent):
+    QMenu.__init__(self, parent)
+
+  def show(self, widget, event, main = None):
+    self.widget = widget
+    self.event = event
+    self.mainWindow = main
+
+    self.clear()
+
+    if hasattr(self.widget, 'clipboardCopy'):
+      action = QAction(_("Copy content"), self)
+      action.triggered.connect(self.action_copy_content)
+      self.addAction(action)
+
+    if hasattr(self.widget, 'getId'):
+      action = QAction(_("Copy detail"), self)
+      action.triggered.connect(self.action_copy_detail)
+      self.addAction(action)
+
+      action = QAction(_("Cut detail"), self)
+      action.triggered.connect(self.action_cut_detail)
+      self.addAction(action)
+
+    if type(self.widget) is TreeView:
+      model = self.widget.model()
+      item = model.itemFromIndex(self.widget.indexAt(self.event.pos()))
+      if item.hasId() and item.getId() != 0:
+        action = QAction(_("Copy"), self)
+        action.triggered.connect(self.action_copy)
+        self.addAction(action)
+
+        action = QAction(_("Cut"), self)
+        action.triggered.connect(self.action_cut)
+        self.addAction(action)
+
+    if QApplication.clipboard().mimeData().hasText():
+      action = QAction(_("Paste"), self)
+      action.triggered.connect(self.action_paste)
+      self.addAction(action)
+
+    self.exec_(self.event.pos())
+
+  def action_copy_content(self):
+    self.widget.clipboardCopy()
+
+  def action_copy_detail(self):
+    QApplication.clipboard().setMimeData(MimeId(self.widget.getId(), MimeId.COPY))
+
+  def action_cut_detail(self):
+    QApplication.clipboard().setMimeData(MimeId(self.widget.getId(), MimeId.CUT))
+
+  def action_copy(self):
+    #if type(self.widget) is TreeView:
+      model = self.widget.model()
+      item = model.itemFromIndex(self.widget.indexAt(self.event.pos()))
+      if item.hasId():
+        QApplication.clipboard().setMimeData(MimeId(item.getId(), MimeId.COPY, item))
+
+  def action_cut(self):
+    #if type(self.widget) is TreeView:
+      model = self.widget.model()
+      item = model.itemFromIndex(self.widget.indexAt(self.event.pos()))
+      if item.hasId():
+        QApplication.clipboard().setMimeData(MimeId(item.getId(), MimeId.CUT, item))
+
+  def action_paste(self):
+    if type(QApplication.clipboard().mimeData()) is MimeId:
+      src = QApplication.clipboard().text()
+      if type(src) is QString:
+        src = str(src.toUtf8())
+
+      itemOrigem = QApplication.clipboard().mimeData().getItem()
+
+      dst = None
+      itemDestino = None
+      if type(self.widget) is TreeView:
+        model = self.widget.model()
+        itemDestino = model.itemFromIndex(self.widget.indexAt(self.event.pos()))
+        if itemDestino.hasId():
+          dst = itemDestino.getId()
+        else:
+          dst = 0
+      else:
+        dst = self.widget.getId()
+
+      if QApplication.clipboard().mimeData().getOperation() == MimeId.CUT:
+        id = self.mainWindow.database.move(src, dst)
+        if itemOrigem is not None and type(itemOrigem) is TreeView:
+          # remove o item do treeview
+          itemOrigem.parent().removeRow(itemOrigem.row())
+        QApplication.clipboard().clear()
+      else:
+        id = self.mainWindow.database.copy(src, dst)
+      if id != None:
+        if type(self.widget) is TreeView:
+          (id, tipo, pos, label, value, idPai) = self.mainWindow.database.getCurrent(id)
+          if tipo != 'd':
+            e = self.mainWindow.addItem(label, id, tipo, itemDestino)
+            if tipo == 'g':
+              self.mainWindow.showItens(id, e)
+        else:
+          self.mainWindow.showDetailsForItem(id)
+    else:
+      self.widget.clipboardPaste(QApplication.clipboard().text())
+
+
+class MimeId(QMimeData):
+
+  COPY = 1
+  CUT = 2
+
+  def __init__(self, id, op, item = None):
+    QMimeData.__init__(self)
+    self.setText(str(id))
+    self.__operation = op
+    self.__item = item
+
+  def getOperation(self):
+    return self.__operation
+
+  def getItem(self):
+    return self.__item
+
 
 class TreeView(QTreeView):
 
-  def __init__(self, parent, focus = None, renamecb = None):
+  def __init__(self, parent, focus = None, renamecb = None, context_menu_cb = None):
     QTreeView.__init__(self, parent)
     self.collapsed.connect(self.collapse)
     self.expanded.connect(self.expand)
     self.focus = focus
     self.__renamecb = renamecb
+    self.__context_menu_cb = context_menu_cb
 
   def focusInEvent(self, focus):
     QTreeView.focusInEvent(self, focus)
@@ -815,6 +1112,9 @@ class TreeView(QTreeView):
     if self.__renamecb is not None:
       self.__renamecb(item.getId(), item.text())
       item.textChanged(True)
+
+  def contextMenuEvent(self, event):
+    self.__context_menu_cb(self, event)
 
 
   def collapse(self, index):
@@ -897,7 +1197,7 @@ class GroupListItem(QStandardItem):
 class ProgressBarDialog(QProgressDialog):
 
   def __init__(self, parent, label):
-    QProgressDialog.__init__(self, label, _("Cancel"), 0, 0, parent)
+    QProgressDialog.__init__(self, label, util.getButtonBoxText(QDialogButtonBox.Cancel), 0, 0, parent)
     self.setWindowTitle(" ")
 
   def updateProgressBar(self, total):
